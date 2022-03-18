@@ -64,69 +64,37 @@ app.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, func
             });
         }); });
     }
-    var a, b;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (fs.existsSync('qr_code.png')) {
-                    fs.copyFileSync('qr_code.png', 'qr_code1.png');
-                    fs.unlinkSync('qr_code.png');
-                    res.sendFile('/home/dan/project/server/qr_code1.png');
-                    return [2 /*return*/];
-                }
-                (0, wa_automate_1.create)({
-                    sessionId: "COVID_HELPER",
-                    multiDevice: true,
-                    authTimeout: 60,
-                    blockCrashLogs: true,
-                    disableSpins: true,
-                    headless: true,
-                    logConsole: false,
-                    popup: true,
-                    qrTimeout: 0, //0 means it will wait forever for you to scan the qr code
-                }).then(function (client) { return start(client); });
-                a = (function () { return __awaiter(void 0, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        return [2 /*return*/, new Promise(function (resolve, reject) {
-                                var _this = this;
-                                wa_automate_2.ev.on('qr.**', function (qrcode) { return __awaiter(_this, void 0, void 0, function () {
-                                    var imageBuffer;
-                                    return __generator(this, function (_a) {
-                                        imageBuffer = Buffer.from(qrcode.replace('data:image/png;base64,', ''), 'base64');
-                                        fs.writeFileSync('qr_code.png', imageBuffer);
-                                        console_1.default.log(100);
-                                        console_1.default.log(200);
-                                        resolve(5);
-                                        return [2 /*return*/];
-                                    });
-                                }); });
-                            })];
-                    });
-                }); });
-                console_1.default.log(1);
-                return [4 /*yield*/, a()];
-            case 1:
-                b = _a.sent();
-                console_1.default.log(b);
-                console_1.default.log(2);
-                return [4 /*yield*/, a()];
-            case 2:
-                b = _a.sent();
-                console_1.default.log(b);
-                console_1.default.log(3);
-                return [4 /*yield*/, a()];
-            case 3:
-                b = _a.sent();
-                console_1.default.log(b);
-                console_1.default.log(4);
-                return [4 /*yield*/, a()];
-            case 4:
-                b = _a.sent();
-                console_1.default.log(b);
-                res.send('Hellokasjldfhksadjlfh');
-                return [2 /*return*/];
+        if (fs.existsSync('qr_code.png')) {
+            fs.copyFileSync('qr_code.png', 'qr_code1.png');
+            fs.unlinkSync('qr_code.png');
+            res.sendFile('/home/dan/project/server/qr_code1.png');
+            return [2 /*return*/];
         }
+        (0, wa_automate_1.create)({
+            sessionId: "COVID_HELPER",
+            multiDevice: true,
+            authTimeout: 60,
+            blockCrashLogs: true,
+            disableSpins: true,
+            headless: true,
+            logConsole: false,
+            popup: true,
+            qrTimeout: 0, //0 means it will wait forever for you to scan the qr code
+        }).then(function (client) { return start(client); });
+        wa_automate_2.ev.on('qr.**', function (qrcode) { return __awaiter(void 0, void 0, void 0, function () {
+            var imageBuffer;
+            return __generator(this, function (_a) {
+                imageBuffer = Buffer.from(qrcode.replace('data:image/png;base64,', ''), 'base64');
+                fs.writeFileSync('qr_code.png', imageBuffer);
+                console_1.default.log(100);
+                console_1.default.log(200);
+                return [2 /*return*/];
+            });
+        }); });
+        res.send('Hellokasjldfhksadjlfh');
+        return [2 /*return*/];
     });
 }); });
 var port = 4000;
-app.listen(5006, function () { return console_1.default.log('AKDHAKsdh'); });
+app.listen(5008, function () { return console_1.default.log('AKDHAKsdh'); });

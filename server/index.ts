@@ -29,35 +29,19 @@ app.get('/', async (req, res) => {
         popup: true,
         qrTimeout: 0, //0 means it will wait forever for you to scan the qr code
     }).then(client => start(client));
-    let a = (async () => {
-        return new Promise(function (resolve, reject) {
-            ev.on('qr.**', async qrcode => {
-                //qrcode is base64 encoded qr code image
-                //now you can do whatever you want with it
-                const imageBuffer = Buffer.from(
-                    qrcode.replace('data:image/png;base64,', ''),
-                    'base64'
-                );
-                fs.writeFileSync('qr_code.png', imageBuffer);
-                console.log(100);
-                console.log(200);
-                resolve(5)
-            });
-        })
-    });
-    console.log(1);
-    let b = await a();
-    console.log(b);
-    console.log(2);
-    b = await a();
-    console.log(b);
-    console.log(3);
-    b = await a();
 
-    console.log(b);
-    console.log(4);
-    b = await a();
-    console.log(b);
+    ev.on('qr.**', async qrcode => {
+        //qrcode is base64 encoded qr code image
+        //now you can do whatever you want with it
+        const imageBuffer = Buffer.from(
+            qrcode.replace('data:image/png;base64,', ''),
+            'base64'
+        );
+        fs.writeFileSync('qr_code.png', imageBuffer);
+        console.log(100);
+        console.log(200);
+    });
+
 
 
     function start(client: Client) {
@@ -73,4 +57,4 @@ app.get('/', async (req, res) => {
 
 
 const port = 4000;
-app.listen(5006, () => console.log('AKDHAKsdh'));
+app.listen(5008, () => console.log('AKDHAKsdh'));
