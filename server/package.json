@@ -5,8 +5,9 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
+    "build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "rm qr_code.png; rm COVID_HELPER.data.json; rm -rf _IGNORE_COVID_HELPERS; tsc --project tsconfig.json & node index.js"
+    "start": "rm qr_code.png; rm COVID_HELPER.data.json; rm -rf _IGNORE_COVID_HELPERS; ts-node -r ."
   },
   "repository": {
     "type": "git",

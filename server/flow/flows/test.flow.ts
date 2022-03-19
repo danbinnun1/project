@@ -1,9 +1,12 @@
-require('@open-wa/wa-automate');
+import { MessageTypes } from "@open-wa/wa-automate";
 import { Flow, registerFlow } from "..";
 import { askBoolean } from "../util";
- 
+
 const flow: Flow = async (error, send, ask, data) => {
+  console.log('skjfg');
+  console.log('poiuytrewq');
   const { choice } = await askBoolean(ask, "בטוח שתרצה לבדוק?");
+  console.log('uysdf');
   if (choice) {
     const { text } = await ask(
       "מה שמך ידידי הטוב?",
@@ -21,13 +24,15 @@ const flow: Flow = async (error, send, ask, data) => {
   }
 };
 
-registerFlow(
-  {
-    memberOnly: false,
-    privateOnly: false,
-    identifier: "פינג",
-    description: "פקודת בדיקה",
-    name: "בדיקה",
-  },
-  flow
-);
+export default flow;
+
+// registerFlow(
+//   {
+//     memberOnly: false,
+//     privateOnly: false,
+//     identifier: "פינג",
+//     description: "פקודת בדיקה",
+//     name: "בדיקה",
+//   },
+//   flow
+// );

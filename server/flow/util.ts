@@ -35,6 +35,7 @@ export async function askBoolean(
     ""
   );
 
+  console.log(response.text);
   if (response.text === "כן")
     return {
       ...response,
