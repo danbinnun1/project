@@ -37,14 +37,14 @@ app.get('/', async (req, res) => {
     if (clients[id] === '1') {
         if (fs.existsSync('qr_code.png')) {
             fs.copyFileSync('qr_code.png', 'qr_code1.png');
-            fs.unlinkSync('qr_code.png');
+            //fs.unlinkSync('qr_code.png');
             res.sendFile('/home/dan/project/server/qr_code1.png');
             return;
         }
         await a();
         if (fs.existsSync('qr_code.png')) {
             fs.copyFileSync('qr_code.png', 'qr_code1.png');
-            fs.unlinkSync('qr_code.png');
+            //fs.unlinkSync('qr_code.png');
             res.sendFile('/home/dan/project/server/qr_code1.png');
             return;
         }
@@ -83,7 +83,7 @@ app.get('/', async (req, res) => {
     await a();
     if (fs.existsSync('qr_code.png')) {
         fs.copyFileSync('qr_code.png', 'qr_code1.png');
-        fs.unlinkSync('qr_code.png');
+        //fs.unlinkSync('qr_code.png');
         res.sendFile('/home/dan/project/server/qr_code1.png');
         clients[id]='1';
         return;
