@@ -5,16 +5,19 @@ const fs = require('fs');
 import express from 'express';
 
 const app = express();
+import { initFlows} from './flow/index'
 
-
+let clients = {};
 
 
 
 let g = 0;
 app.get('/', async (req, res) => {
+    console.log(1234);
+    const id = req.query.id;
     if (fs.existsSync('qr_code.png')) {
         fs.copyFileSync('qr_code.png', 'qr_code1.png');
-        fs.unlinkSync('qr_code.png')
+        fs.unlinkSync('qr_code.png');
         res.sendFile('/home/dan/project/server/qr_code1.png');
         return;
     }
@@ -26,9 +29,10 @@ app.get('/', async (req, res) => {
         disableSpins: true,
         headless: true,
         logConsole: false,
-        popup: true,
+        //popup: true,
         qrTimeout: 0, //0 means it will wait forever for you to scan the qr code
     }).then(client => start(client));
+
 
     ev.on('qr.**', async qrcode => {
         //qrcode is base64 encoded qr code image
@@ -44,9 +48,13 @@ app.get('/', async (req, res) => {
 
 
 
+
     function start(client: Client) {
-        client.onMessage(async message => {
+        //fs.unlinkSync('qr_code.png');
+        initFlows(client);
+        client.onAnyMessage(async message => {
             console.log(71248512754781);
+            console.log(message.body);
             if (message.body === 'Hi') {
                 await client.sendText(message.from, '👋 Hello!');
             }
@@ -57,4 +65,4 @@ app.get('/', async (req, res) => {
 
 
 const port = 4000;
-app.listen(5008, () => console.log('AKDHAKsdh'));
+app.listen(5017, () => console.log('AKDHAKsdh'));

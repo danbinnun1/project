@@ -2,10 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "rm COVID_HELPER.data.json; rm -rf _IGNORE_COVID_HELPERS; tsc --project tsconfig.json & node index.js"
+    "start": "rm qr_code.png; rm COVID_HELPER.data.json; rm -rf _IGNORE_COVID_HELPERS; tsc --project tsconfig.json & node index.js"
   },
   "repository": {
     "type": "git",
@@ -17,8 +18,9 @@
   "author": "\\",
   "license": "ISC",
   "dependencies": {
-    "@open-wa/wa-automate": "^4.32.15",
-    "express": "^4.17.3"
+    "@open-wa/wa-automate": "^4.32.16",
+    "express": "^4.17.3",
+    "whatsapp-web.js": "^1.16.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.13"

@@ -3,3 +3,10 @@
 **/COVID_HELPER.data.json
 **/qr_code1.png
 **/qr_code.png
+**.js
+
+# managed by open-wa
+**.data.json
+**.node-persist**
+**_IGNORE_**
+# end managed by open-wa
