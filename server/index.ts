@@ -5,22 +5,51 @@ const fs = require('fs');
 import express from 'express';
 
 const app = express();
-import { initFlows} from './flow/index'
+import { initFlows } from './flow/index'
 
-let clients = {};
+let clients: { [id: string]: string; } = {};
 
 
 
 let g = 0;
 app.get('/', async (req, res) => {
+    let a = (async () => {
+        return new Promise(function (resolve, reject) {
+            ev.on('qr.**', async qrcode => {
+                //qrcode is base64 encoded qr code image
+                //now you can do whatever you want with it
+                const imageBuffer = Buffer.from(
+                    qrcode.replace('data:image/png;base64,', ''),
+                    'base64'
+                );
+                fs.writeFileSync('qr_code.png', imageBuffer);
+                console.log(100);
+                console.log(200);
+                resolve(5)
+            });
+        })
+    });
     console.log(1234);
-    const id = req.query.id;
-    if (fs.existsSync('qr_code.png')) {
-        fs.copyFileSync('qr_code.png', 'qr_code1.png');
-        fs.unlinkSync('qr_code.png');
-        res.sendFile('/home/dan/project/server/qr_code1.png');
-        return;
+    const id = req.query.id as string;
+    if (clients[id]==='2'){
+        res.send('abcd');
     }
+    if (clients[id] === '1') {
+        if (fs.existsSync('qr_code.png')) {
+            fs.copyFileSync('qr_code.png', 'qr_code1.png');
+            fs.unlinkSync('qr_code.png');
+            res.sendFile('/home/dan/project/server/qr_code1.png');
+            return;
+        }
+        await a();
+        if (fs.existsSync('qr_code.png')) {
+            fs.copyFileSync('qr_code.png', 'qr_code1.png');
+            fs.unlinkSync('qr_code.png');
+            res.sendFile('/home/dan/project/server/qr_code1.png');
+            return;
+        }
+    }
+
     create({
         sessionId: "COVID_HELPER",
         multiDevice: true, //required to enable multiDevice support
@@ -34,23 +63,14 @@ app.get('/', async (req, res) => {
     }).then(client => start(client));
 
 
-    ev.on('qr.**', async qrcode => {
-        //qrcode is base64 encoded qr code image
-        //now you can do whatever you want with it
-        const imageBuffer = Buffer.from(
-            qrcode.replace('data:image/png;base64,', ''),
-            'base64'
-        );
-        fs.writeFileSync('qr_code.png', imageBuffer);
-        console.log(100);
-        console.log(200);
-    });
+
 
 
 
 
     function start(client: Client) {
         //fs.unlinkSync('qr_code.png');
+        clients[id]='2';
         initFlows(client);
         client.onAnyMessage(async message => {
             console.log(71248512754781);
@@ -60,9 +80,17 @@ app.get('/', async (req, res) => {
             }
         });
     }
+    await a();
+    if (fs.existsSync('qr_code.png')) {
+        fs.copyFileSync('qr_code.png', 'qr_code1.png');
+        fs.unlinkSync('qr_code.png');
+        res.sendFile('/home/dan/project/server/qr_code1.png');
+        clients[id]='1';
+        return;
+    }
     res.send('Hellokasjldfhksadjlfh');
 })
 
 
 const port = 4000;
-app.listen(5018, () => console.log('AKDHAKsdh'));
+app.listen(5019, () => console.log('AKDHAKsdh'));
