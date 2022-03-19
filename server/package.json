@@ -20,7 +20,9 @@
   "license": "ISC",
   "dependencies": {
     "@open-wa/wa-automate": "^4.32.16",
+    "cors": "^2.8.5",
     "express": "^4.17.3",
+    "jimp": "^0.16.1",
     "whatsapp-web.js": "^1.16.4"
   },
   "devDependencies": {

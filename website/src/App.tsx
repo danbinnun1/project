@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import fetch, {RequestInit} from 'node-fetch';
 
 
 
 function App() {
+  const [image, updateState]=React.useState<any>();
+  useEffect(() =>{
+    async function getImage() {
+      let res=await fetch('http://localhost:5019?id=8');
+      let data=await res.blob();
+      updateState(URL.createObjectURL(data as Blob));
+    }
+    getImage();
+  }, []);
+
+  function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // (async () => {
+  //   await delay(1000);
+  //   console.log(6);
+  //   updateState(image);
+  // })();
+
+  //const response = await fetch('localhost:5019?id=8');
 
 
 
@@ -13,20 +35,8 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+      {image===undefined?'': <img src={image} alt="icons"></img>}
     </div>
   );
 }

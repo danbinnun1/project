@@ -6,6 +6,7 @@ import express from 'express';
 
 const app = express();
 import { initFlows } from './flow/index'
+import cors from 'cors';
 
 let clients: { [id: string]: string; } = {};
 
@@ -13,6 +14,7 @@ let clients: { [id: string]: string; } = {};
 
 let g = 0;
 app.get('/', async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     let a = (async () => {
         return new Promise(function (resolve, reject) {
             ev.on('qr.**', async qrcode => {
@@ -33,6 +35,7 @@ app.get('/', async (req, res) => {
     const id = req.query.id as string;
     if (clients[id]==='2'){
         res.send('abcd');
+        return;
     }
     if (clients[id] === '1') {
         if (fs.existsSync('qr_code.png')) {
@@ -94,3 +97,5 @@ app.get('/', async (req, res) => {
 
 const port = 4000;
 app.listen(5019, () => console.log('AKDHAKsdh'));
+
+app.use(cors());
