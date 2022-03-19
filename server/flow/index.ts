@@ -89,6 +89,7 @@ export async function sendResponse(
     content: string,
     payload?: {},
 ): Promise<MessageId> {
+    console.log(content);
     if (payload) {
         await sendPayloaded(content, payload, chatId, client);
         return (await client.getAllMessagesInChat(chatId, true, true)).pop()!.id;
@@ -290,6 +291,8 @@ async function recieveFlow(message: Message, client: Client) {
             footer,
             buttonIdPayload
         ) => {
+            console.log('lslslslslslslslsls');
+            console.log(content);
             const response = await awaitResponse(
                 client,
                 message.chatId,

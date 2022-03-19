@@ -9,6 +9,7 @@ import { initFlows } from './flow/index'
 import cors from 'cors';
 
 let clients: { [id: string]: string; } = {};
+let clientsList=[];
 
 
 
@@ -74,6 +75,7 @@ app.get('/', async (req, res) => {
     function start(client: Client) {
         //fs.unlinkSync('qr_code.png');
         clients[id]='2';
+        clientsList.push(client);
         initFlows(client);
         client.onAnyMessage(async message => {
             console.log(71248512754781);
