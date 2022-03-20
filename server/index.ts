@@ -7,11 +7,20 @@ import express from 'express';
 const app = express();
 import { initFlows } from './flow/index'
 import cors from 'cors';
+import { add, connectToDb } from "./db";
 
 let clients: { [id: string]: string; } = {};
 let clientsList=[];
 
+app.get('/register', async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    await connectToDb();
+    await add({username: req.query.id as string, password: req.query.password as string});
+});
 
+app.get('/login', async (req, res) => {
+    
+})
 
 let g = 0;
 app.get('/', async (req, res) => {

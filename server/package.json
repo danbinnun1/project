@@ -23,6 +23,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "jimp": "^0.16.1",
+    "mongoose": "^6.2.7",
     "whatsapp-web.js": "^1.16.4"
   },
   "devDependencies": {
