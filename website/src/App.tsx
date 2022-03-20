@@ -5,6 +5,7 @@ import fetch, { RequestInit } from 'node-fetch';
 import { BrowserRouter, Link, Route, Router, Routes } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Form from './Register';
+import Login from './Login';
 
 
 function App() {
@@ -14,8 +15,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/signup" element={<Form></Form>} />
+          <Route path="/login" element={<Login></Login>}></Route>
         </Routes>
         <Link to="/signup" className="btn btn-primary">sign</Link>
+        <br></br>
+        <Link to="/login" className="btn btn-primary">login</Link>
       </BrowserRouter>
     </div>
   );

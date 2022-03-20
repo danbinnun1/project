@@ -23,6 +23,11 @@ export const add= (user: User)=>{
     doc.save();
 }
 
+export const exists = (user: User) : boolean=>{
+    let a=  UserModel.exists(user);
+    return true;
+}
+
 export const connectToDb = async () => {
     // add your own uri below
     const uri = "mongodb://localhost:27017/test";
