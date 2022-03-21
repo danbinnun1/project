@@ -50,9 +50,7 @@ interface FlowData {
     groupId: ChatId;
 }
 
-const flowStore: FlowStore = {
-    flows: [],
-};
+const flowStore: { [username: string]: FlowStore } = {};
 
 export type AskCall = (
     content: string,
@@ -195,8 +193,11 @@ export async function sendError(
     await client.reply(message.chatId, `⚠️ ${error}`, message.id);
 }
 
-export const registerFlow = (options: FlowOptions, flow: Flow) => {
-    flowStore.flows.push({
+export const registerFlow = (options: FlowOptions, flow: Flow, username: string) => {
+    if (flowStore[username] === undefined) {
+        flowStore[username] = { flows: [] };
+    }
+    flowStore[username].flows.push({
         flow,
         options: Object.assign(
             {
@@ -216,7 +217,7 @@ export const registerFlow = (options: FlowOptions, flow: Flow) => {
 
 import flow from './flows/test.flow';
 
-export function initFlows(client: Client) {
+export function initFlows(client: Client, username: string) {
     if (!client) return;
 
     const normalizedPath = path.join(__dirname, "flows");
@@ -228,11 +229,11 @@ export function initFlows(client: Client) {
         description: "פקודת בדיקה",
         name: "בדיקה",
     },
-        flow);
+        flow, '1');
 
 
     client.onAnyMessage((message: Message) => {
-        recieveFlow(message, client);
+        recieveFlow(message, client, username);
         console.log(message);
     });
 }
@@ -241,7 +242,7 @@ function isFlow(flow: RegisteredFlow, message: Message) {
     const start = `${flow.options.identifier}`;
 }
 
-async function recieveFlow(message: Message, client: Client) {
+async function recieveFlow(message: Message, client: Client, username: string) {
     if (
         message.type !== MessageTypes.TEXT &&
         message.type != MessageTypes.BUTTONS_RESPONSE
@@ -250,7 +251,7 @@ async function recieveFlow(message: Message, client: Client) {
 
     const [identifier, ...args] = message.content.split(" ");
 
-    const found = flowStore.flows.find(
+    const found = flowStore[username].flows.find(
         (flow) =>
             `$${flow.options.identifier}` === identifier ||
             (flow.options.aliases &&

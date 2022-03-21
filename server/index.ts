@@ -5,14 +5,32 @@ const fs = require('fs');
 import express from 'express';
 
 const app = express();
-import { initFlows } from './flow/index'
+import { Flow, initFlows, registerFlow } from './flow/index'
 import cors from 'cors';
 import { add, connectToDb, exists } from "./db";
 
 
 
 let clients: { [id: string]: Client | string; } = {};
-
+app.get('/add_poll', async (req, res) => {
+    let text: string = req.query.text as string;
+    let username: string = req.query.username as string;
+    let questions = text.split(',').slice(1);
+    const flow: Flow = async (error, send, ask, data) => {
+        for (let question of questions) {
+            const { text } = await ask(question, MessageTypes.TEXT);
+            await send(text);
+        }
+        await send('good');
+    };
+    registerFlow({
+        memberOnly: false,
+        privateOnly: false,
+        identifier: text.split(',')[0],
+        description: "פקודת בדיקה",
+        name: "בדיקה",
+    }, flow, username);
+});
 
 app.get('/register', async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
@@ -24,7 +42,7 @@ app.get('/login', async (req, res) => {
     const id = req.query.username as string;
     function start(client: Client) {
         clients[id] = client;
-        initFlows(client);
+        initFlows(client, id);
         client.onAnyMessage(async message => {
             console.log(71248512754781);
             console.log(message.body);

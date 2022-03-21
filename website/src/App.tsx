@@ -6,6 +6,7 @@ import { BrowserRouter, Link, Route, Router, Routes } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import Form from './Register';
 import Login from './Login';
+import UserPage from './UserPage';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<Form></Form>} />
           <Route path="/login" element={<Login></Login>}></Route>
+          <Route path="/userpage" element={<UserPage></UserPage>}></Route>
         </Routes>
         <Link to="/signup" className="btn btn-primary">sign</Link>
         <br></br>

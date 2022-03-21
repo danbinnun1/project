@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 
-export default function UserPage() {
+export default function UserPage(props: any) {
 
     // States for registration
     const [content, setcontent] = useState('');
@@ -19,7 +19,7 @@ export default function UserPage() {
     // Handling the form submission
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        await fetch('http://localhost:5019/register?id='+name+'&password=');
+        await fetch('http://localhost:5019/add_poll?username='+props.username+'&text='+content);
     };
 
 
@@ -28,7 +28,7 @@ export default function UserPage() {
     return (
         <div className="form">
             <div>
-                <h1>User Page</h1>
+                <h1>hello {props.username}</h1>
             </div>
 
 
