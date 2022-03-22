@@ -1,18 +1,34 @@
-import { create, Client, Message, MessageTypes, QRFormat, Content } from "@open-wa/wa-automate";
+import { create, Client, Message, MessageTypes, QRFormat, Content, ContactId } from "@open-wa/wa-automate";
 import { ev } from '@open-wa/wa-automate';
 import console from "console";
 const fs = require('fs');
 import express from 'express';
-
+import {json} from 'body-parser';
 const app = express();
-import { Flow, initFlows, registerFlow } from './flow/index'
+import { addPoll, Flow, initFlows, Poll, polls, registerFlow, startPoll } from './flow/index'
 import cors from 'cors';
 import { add, connectToDb, exists } from "./db";
-
-
+import bodyParser from "body-parser";
 
 let clients: { [id: string]: Client | string; } = {};
-app.get('/add_poll', async (req, res) => {
+
+app.post('/add_poll', json(), async (req, res) => {
+    let username: string = req.query.username as string;
+    const pollName: string = req.query.name as string;
+    let poll: Poll = req.body;
+    addPoll(username, pollName, poll);
+    res.send("good");
+})
+
+app.get('/send_poll', async (req, res)=>{
+    let username: string = req.query.username as string;
+    const pollName: string = req.query.name as string;
+    const poll=polls[username][pollName];
+    startPoll(req.query.recepient as ContactId, poll,clients[username] as Client);
+    res.send("good");
+})
+
+app.get('/add_poll1', async (req, res) => {
     let text: string = req.query.text as string;
     let username: string = req.query.username as string;
     let questions = text.split(',').slice(1);
@@ -94,6 +110,6 @@ app.get('/login', async (req, res) => {
     }
     res.send('not exists');
 })
-
+//app.use(json());
 app.listen(5019, () => console.log('AKDHAKsdh'));
 app.use(cors());

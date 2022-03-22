@@ -1,3 +1,15 @@
+export interface Edge {
+    question: string,
+    to: string,
+    category?: number
+}
+
+export interface Poll {
+    start: string,
+    vertexes: string[],
+    edges: { [from: string]: Edge[] }
+}
+
 
 import {
     ChatId,
@@ -51,6 +63,15 @@ interface FlowData {
 }
 
 const flowStore: { [username: string]: FlowStore } = {};
+
+export const polls: { [username: string]: { [name: string]: Poll } } = {};
+
+export function addPoll(username: string, pollName: string, poll: Poll) {
+    if (!polls[username]) {
+        polls[username] = {};
+    }
+    polls[username][pollName] = poll;
+}
 
 export type AskCall = (
     content: string,
@@ -240,6 +261,30 @@ export function initFlows(client: Client, username: string) {
 
 function isFlow(flow: RegisteredFlow, message: Message) {
     const start = `${flow.options.identifier}`;
+}
+
+export async function startPoll(recepient: ContactId, poll: Poll, client: Client) {
+    let current = poll.start;
+    let path = [current];
+    while (true) {
+        await client.sendText(recepient, current);
+        const response = await awaitResponse(client,
+            recepient,
+            recepient,
+            undefined,
+            current,
+            MessageTypes.BUTTONS_RESPONSE,
+            undefined, undefined,
+            poll.edges[current].map(edge => edge.question),
+            'abcd');
+        let selected = poll.edges[current].filter(edge => edge.question === response.text)[0];
+        current = selected.to;
+        path.push(current);
+        if (!poll.edges[current] || poll.edges[current].length === 0) {
+            break;
+        }
+    }
+    return path;
 }
 
 async function recieveFlow(message: Message, client: Client, username: string) {
