@@ -2,29 +2,25 @@ const mongoose = require("mongoose");
 let database: any;
 import { Schema, Document, Model, model } from "mongoose";
 
-
-
-interface User{
+export interface User {
     username: string,
     password: string
 }
 
-const userSchema= new Schema<User>({
+const userSchema = new Schema<User>({
     username: String,
     password: String
-})
+});
 
+const UserModel = model<User>("model", userSchema);
 
-
-const UserModel= model<User>("model",userSchema);
-
-export const add= (user: User)=>{
+export const add = (user: User) => {
     const doc = new UserModel(user);
     doc.save();
 }
 
-export const exists = (user: User) : boolean=>{
-    let a=  UserModel.exists(user);
+export const exists = (user: User): boolean => {
+    let a = UserModel.exists(user);
     return true;
 }
 
