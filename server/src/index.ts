@@ -4,7 +4,7 @@ import { json } from 'body-parser';
 const app = express();
 import cors from 'cors';
 import { add, connectToDb } from "./db/user";
-import { addPoll } from "./db/poll";
+import { addPoll, findByNameAndUsername } from "./db/poll";
 import { PollData } from "./poll";
 import { tryLogin } from "./clients_registry";
 
@@ -18,7 +18,7 @@ app.post('/add_poll', json(), async (req, res) => {
 app.get('/send_poll', async (req, res) => {
     let username: string = req.query.username as string;
     const pollName: string = req.query.name as string;
-    //const poll=polls[username][pollName];
+    const poll = await findByNameAndUsername(pollName, username);
     //startPoll(req.query.recepient as ContactId, poll,clients[username] as Client);
     res.send("good");
 })

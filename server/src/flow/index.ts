@@ -1,19 +1,12 @@
 import {
     ChatId,
     Client,
-    Contact,
     ContactId,
     Message,
     MessageId,
     MessageTypes,
 } from "@open-wa/wa-automate";
-import fs from "fs";
-import path from "path";
-import { Page } from "puppeteer";
-import { sendPayloaded, writePayload } from "./payload";
-
-
-
+import { sendPayloaded } from "./payload";
 
 
 const selfChat = "17622130901@c.us";
@@ -24,7 +17,6 @@ export interface Response {
     original: MessageId;
     text: string;
 }
-
 
 export type AskCall = (
     content: string,
@@ -149,5 +141,3 @@ export async function sendError(
 ) {
     await client.reply(message.chatId, `⚠️ ${error}`, message.id);
 }
-
-
