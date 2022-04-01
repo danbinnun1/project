@@ -1,48 +1,36 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 
-export default function UserPage(props: any) {
+export default function UserPage() {
+    let [polls, setPolls] = useState<any[]>([]);
+    let params = useParams();
 
-    // States for registration
-    const [content, setcontent] = useState('');
+    useEffect(() => {
+        async function fetchPolls() {
+            let response = await fetch("http://localhost:5019/polls?username=" + params.username);
+            let pollsJson = await response.json();
+            setPolls(pollsJson);
+        }
+        fetchPolls();
+    }, []);
 
-
-
-    // Handling the name change
-    const handleContent = (e: any) => {
-        setcontent(e.target.value);
-    };
-
-
-
-    // Handling the form submission
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
-        await fetch('http://localhost:5019/add_poll?username='+props.username+'&text='+content);
-    };
-
-
-
+    //let polls = await fetch("localhost:5019/polls?username="+params.username);
 
     return (
-        <div className="form">
-            <div>
-                <h1>hello {props.username}</h1>
-            </div>
-
-
-            <form>
-                {/* Labels and inputs for form data */}
-                <label className="label">content</label>
-                <input onChange={handleContent} className="input"
-                    value={content} type="text" />
-
-
-                <button onClick={handleSubmit} className="btn" type="submit">
-                    Submit
-                </button>
-            </form>
+        <div>
+            <table>
+                {polls.map(poll => 
+                    <tr>
+                        <th>{poll.name}</th>
+                        <th>{poll.recepients.map((recepient: any) => 
+                            <div>
+                            {recepient}<br></br></div>
+                        )}</th>
+                    </tr>
+                )}
+            </table>
         </div>
     );
 }

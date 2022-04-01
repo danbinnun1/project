@@ -4,9 +4,10 @@ import { json } from 'body-parser';
 const app = express();
 import cors from 'cors';
 import { add, connectToDb } from "./db/user";
-import { addPoll, findByNameAndUsername } from "./db/poll";
-import { PollData } from "./poll";
-import { tryLogin } from "./clients_registry";
+import { addPoll, findByNameAndUsername, getPolls } from "./db/poll";
+import { PollData, startPoll } from "./poll";
+import { clients, tryLogin } from "./clients_registry";
+import { Client, ContactId } from "@open-wa/wa-automate";
 
 
 app.post('/add_poll', json(), async (req, res) => {
@@ -15,11 +16,25 @@ app.post('/add_poll', json(), async (req, res) => {
     res.end();
 })
 
+app.get('/polls', async (req,res)=>{
+    res.set('Access-Control-Allow-Origin', '*');
+    let polls = await getPolls(req.query.username as string);
+    res.send(polls);
+    res.end();
+});
+
+app.get('/poll', async (req, res)=>{
+    let username: string = req.query.username as string;
+    const pollName: string = req.query.name as string;
+    const poll = await findByNameAndUsername(pollName, username);
+    res.send(poll);
+})
+
 app.get('/send_poll', async (req, res) => {
     let username: string = req.query.username as string;
     const pollName: string = req.query.name as string;
     const poll = await findByNameAndUsername(pollName, username);
-    //startPoll(req.query.recepient as ContactId, poll,clients[username] as Client);
+    startPoll(poll as any,clients[username] as Client);
     res.send("good");
 })
 
