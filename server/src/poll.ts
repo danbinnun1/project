@@ -1,5 +1,5 @@
 import { Client, ContactId, MessageTypes } from "@open-wa/wa-automate";
-import { addSubmission } from "./db/poll";
+import { addSubmission, updatePoll } from "./db/poll";
 import { awaitResponse } from "./flow";
 
 export interface Edge {
@@ -19,7 +19,8 @@ export interface PollData {
     username: string,
     name: string,
     recepients: ContactId[],
-    submissions: { [username: string]: Submission }
+    submissions: { [username: string]: Submission },
+    isActive: boolean
 }
 
 export type PollDataDB = PollData  & { _id: any };
@@ -30,6 +31,8 @@ export interface Submission {
 }
 
 export async function startPoll(pollData: PollDataDB, client: Client) {
+    pollData.isActive = true;
+    updatePoll(pollData);
     const poll = pollData.poll;
     for (let recepient of pollData.recepients) {
         let current = poll.start;

@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 
 export default function UserPage() {
@@ -21,12 +21,13 @@ export default function UserPage() {
     return (
         <div>
             <table>
-                {polls.map(poll => 
+                {polls.map(poll =>
                     <tr>
-                        <th>{poll.name}</th>
-                        <th>{poll.recepients.map((recepient: any) => 
+                        <th><Link to={"/poll/"+params.username+"/"+poll.name} className='btn btn-primary' >{poll.name}</Link>
+                        </th>
+                        <th>{poll.recepients.map((recepient: any) =>
                             <div>
-                            {recepient}<br></br></div>
+                                {recepient}<br></br></div>
                         )}</th>
                     </tr>
                 )}

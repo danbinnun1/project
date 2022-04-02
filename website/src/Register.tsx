@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 
-export default function Form() {
+export default function Register() {
 
     // States for registration
     const [name, setName] = useState('');

@@ -4,7 +4,7 @@ import { json } from 'body-parser';
 const app = express();
 import cors from 'cors';
 import { add, connectToDb } from "./db/user";
-import { addPoll, findByNameAndUsername, getPolls } from "./db/poll";
+import { addPoll, findByNameAndUsername, getPolls, updatePoll } from "./db/poll";
 import { PollData, startPoll } from "./poll";
 import { clients, tryLogin } from "./clients_registry";
 import { Client, ContactId } from "@open-wa/wa-automate";
@@ -23,7 +23,14 @@ app.get('/polls', async (req,res)=>{
     res.end();
 });
 
+app.post('/poll', json(), async (req, res)=>{
+    res.set('Access-Control-Allow-Origin', '*');
+    await updatePoll(req.body);
+    res.end();
+})
+
 app.get('/poll', async (req, res)=>{
+    res.set('Access-Control-Allow-Origin', '*');
     let username: string = req.query.username as string;
     const pollName: string = req.query.name as string;
     const poll = await findByNameAndUsername(pollName, username);
@@ -34,7 +41,7 @@ app.get('/send_poll', async (req, res) => {
     let username: string = req.query.username as string;
     const pollName: string = req.query.name as string;
     const poll = await findByNameAndUsername(pollName, username);
-    startPoll(poll as any,clients[username] as Client);
+    startPoll(poll!,clients[username] as Client);
     res.send("good");
 })
 

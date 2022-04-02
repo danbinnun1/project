@@ -21,11 +21,14 @@ export async function findByNameAndUsername(name: string, username: string):
 
 
 export const addSubmission = async (submission: Submission, poll: PollDataDB, user: string) => {
-    const doc: any = await PollModel.findById(poll._id);
-    doc.submissions[user] = submission;
-    doc.save();
+    poll.submissions[user]=submission;
+    updatePoll(poll);
 }
 
 export const getPolls = async (username: string) => {
     return await PollModel.find({ username });
+}
+
+export async function updatePoll(poll:PollDataDB){
+    await PollModel.findByIdAndUpdate(poll._id, poll);
 }
