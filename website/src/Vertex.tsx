@@ -4,19 +4,15 @@ import useState from 'react-usestateref';
 
 
 interface State {
-    x: number;
-    y: number;
     relX: number;
     relY: number;
     previousDragging: boolean;
     dragging: boolean;
 }
 
-export default function Vertex() {
+export default function Vertex(props:any) {
     const inputRef: any = useRef();
     const [state, setState, stateRef] = useState<State>({
-        x: 500,
-        y: 500,
         relX: 0,
         relY: 0,
         previousDragging: false,
@@ -45,6 +41,7 @@ export default function Vertex() {
         setState({
             ...(stateRef.current as any), dragging: false
         });
+        props.onMouseUp(props.id);
         console.log(inputRef.current);
     },[]);
 
@@ -52,9 +49,7 @@ export default function Vertex() {
         if (!stateRef.current.dragging){
             return;
         }
-        setState({
-            ...stateRef.current, x: e.pageX-stateRef.current.relX, y: e.pageY-stateRef.current.relY
-        });
+        props.positionChanged(e.pageX-stateRef.current.relX,e.pageY-stateRef.current.relY, props.id);
         e.stopPropagation();
         e.preventDefault();
     },[]);
@@ -72,7 +67,7 @@ export default function Vertex() {
         e.preventDefault();
     }
 
-    return <div ref={inputRef} onMouseDown={onMouseDown} style={{backgroundColor:'blue', left: state.x + 'px', top: state.y + 'px', position: 'absolute' }}
+    return <div ref={inputRef} onMouseDown={onMouseDown} style={{textAlign:'center', borderRadius: '50%', height:'10rem', width:'10rem', backgroundColor:'blue', left: props.x + 'px', top: props.y + 'px', position: 'absolute' }}
     >1</div>
 
 }
