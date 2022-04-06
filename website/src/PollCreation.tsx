@@ -5,7 +5,7 @@ import Vertex from "./Vertex";
 export default function PollCreation() {
     const [vertexes, setVertexes, vertexesRef] = useState<{ x: number, y: number }[]>
         ([{ x: 0, y: 0 }, { x: 100, y: 100 }, { x: 200, y: 200 }]);
-    const [edges, setEdges, edgesRef] = useState<{ src: number, dest: number }[]>([{src:1, dest:2}]);
+    const [edges, setEdges, edgesRef] = useState<{ src: number, dest: number }[]>([{ src: 1, dest: 2 }]);
     const vertexSize = 30;
 
     function positionChanged(x: number, y: number, index: number) {
@@ -28,7 +28,29 @@ export default function PollCreation() {
         setVertexes(newVertexes);
     }
 
-    return <div style={{ width: '80%', height: '80%', position: 'absolute', backgroundColor: 'red', transform: 'rotate(0deg)' }}>
+    return <div>
+        <div style={{ width: '80%', height: '10%', position: 'absolute' }}>
+            <table style={{
+                width: '100%', height: '100%',
+            }}>
+                <tr style={{
+                    width: '100%', height: '100%'}}>
+                    <th style={{
+                        width: '20%', height: '100%',
+                        borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
+                    }}>1</th>
+                    <th style={{
+                        width: '20%', height: '100%',
+                        borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
+                    }}>2</th>
+                </tr>
+            </table>
+        </div>
+        <div style={{
+            width: '80%', height: '80%', position: 'absolute',
+            backgroundColor: 'red', transform: 'rotate(0deg)', top: '10%'
+        }}>
+        </div>
         {edges.map((edge) => (
             <Edge x1={vertexes[edge.src].x + vertexSize / 2} x2={vertexes[edge.dest].x + vertexSize / 2}
                 y1={vertexes[edge.src].y + vertexSize / 2} y2={vertexes[edge.dest].y + vertexSize / 2} height={10}></Edge>
