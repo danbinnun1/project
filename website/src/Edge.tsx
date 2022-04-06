@@ -7,6 +7,8 @@ export default function Edge(props: any) {
     return <div style={{
         height: props.height + 'px', width: length + 'px',
         left: middleX - length / 2 + 'px', top: middleY - props.height / 2 + 'px', position: 'absolute',
-        transform: 'rotate(' + angle + 'rad)', backgroundColor: 'black'
-    }}></div>
+        transform: 'rotate(' + angle + 'rad)', backgroundColor: 'black',
+        border:props.selected?'3px solid white':''
+    }} onClick={props.onClick}
+    ></div>
 }

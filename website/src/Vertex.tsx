@@ -67,7 +67,7 @@ export default function Vertex(props: any) {
         e.preventDefault();
     }
 
-    return <div ref={inputRef} onMouseDown={onMouseDown} style={{
+    return <div ref={inputRef} onMouseDown={onMouseDown} onClick={props.onClick} style={{
         textAlign: 'center',
         borderRadius: '50%',
         height: props.size + 'px',
@@ -75,7 +75,8 @@ export default function Vertex(props: any) {
         backgroundColor: 'blue',
         left: props.x + 'px',
         top: props.y + 'px',
-        position: 'absolute'
+        position: 'absolute',
+        border:props.selected?'3px solid white':'',
     }}
     ></div>
 
