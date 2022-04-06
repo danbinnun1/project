@@ -67,7 +67,7 @@ export default function Vertex(props:any) {
         e.preventDefault();
     }
 
-    return <div ref={inputRef} onMouseDown={onMouseDown} style={{textAlign:'center', borderRadius: '50%', height:'10rem', width:'10rem', backgroundColor:'blue', left: props.x + 'px', top: props.y + 'px', position: 'absolute' }}
+    return <div ref={inputRef} onMouseDown={onMouseDown} style={{textAlign:'center', borderRadius: '50%', height:props.size+'px', width:props.size+'px', backgroundColor:'blue', left: props.x + 'px', top: props.y + 'px', position: 'absolute' }}
     >1</div>
 
 }
