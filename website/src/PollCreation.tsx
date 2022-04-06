@@ -3,9 +3,8 @@ import Edge from './Edge';
 import Vertex from "./Vertex";
 
 export default function PollCreation() {
-    const [vertexes, setVertexes, vertexesRef] = useState<{ x: number, y: number }[]>
-        ([{ x: 0, y: 0 }, { x: 100, y: 100 }, { x: 200, y: 200 }]);
-    const [edges, setEdges, edgesRef] = useState<{ src: number, dest: number }[]>([{ src: 1, dest: 2 }]);
+    const [vertexes, setVertexes, vertexesRef] = useState<{ x: number, y: number, dragging: boolean }[]>([]);
+    const [edges, setEdges, edgesRef] = useState<{ src: number, dest: number }[]>([]);
     const vertexSize = 30;
 
     function positionChanged(x: number, y: number, index: number) {
@@ -18,11 +17,9 @@ export default function PollCreation() {
 
     function onMouseUp(index: number) {
         let newVertexes = [...vertexesRef.current];
-        if (index === 0) {
-            newVertexes.unshift({ x: 0, y: 0 });
-            index++;
-        }
-        if (newVertexes[index].y > window.innerHeight * 0.8 || newVertexes[index].x > window.innerWidth * 0.8) {
+        if (newVertexes[index].y > window.innerHeight * 0.9 ||
+            newVertexes[index].y < window.innerHeight * 0.1 ||
+            newVertexes[index].x > window.innerWidth * 0.8) {
             newVertexes.splice(index, 1);
         }
         setVertexes(newVertexes);
@@ -34,11 +31,27 @@ export default function PollCreation() {
                 width: '100%', height: '100%',
             }}>
                 <tr style={{
-                    width: '100%', height: '100%'}}>
+                    width: '100%', height: '100%'
+                }}>
                     <th style={{
                         width: '20%', height: '100%',
-                        borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
-                    }}>1</th>
+                        borderWidth: '1px', borderColor: 'black', borderStyle: 'solid',
+                        alignItems: 'center',
+                        justifyItems: 'center',
+                    }} align='center'>
+                        <div style={{
+                            borderRadius: '50%',
+                            height: vertexSize + 'px',
+                            width: vertexSize + 'px',
+                            backgroundColor: 'blue',
+                        }} id="12345" onMouseDown={() => {
+                            const rect = document.getElementById("12345")?.getBoundingClientRect();
+                            let newVertexes = [...vertexesRef.current];
+                            newVertexes.push({ x: rect?.x as number, y: rect?.y as number ,
+                            dragging:true});
+                            setVertexes(newVertexes);
+                        }}></div>
+                    </th>
                     <th style={{
                         width: '20%', height: '100%',
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
@@ -57,7 +70,7 @@ export default function PollCreation() {
         ))}
         {vertexesRef.current.map((vertex, id) => (
             <Vertex size={vertexSize} x={vertex.x} y={vertex.y} id={id} positionChanged={positionChanged}
-                onMouseUp={onMouseUp}></Vertex>
+                onMouseUp={onMouseUp} dragging={vertex.dragging}></Vertex>
         ))}
     </div>
 }
