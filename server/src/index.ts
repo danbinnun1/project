@@ -10,7 +10,7 @@ import { clients, tryLogin } from "./clients_registry";
 import { Client, ContactId } from "@open-wa/wa-automate";
 
 
-app.post('/add_poll', json(), async (req, res) => {
+app.post('/poll', json(), async (req, res) => {
     let poll: PollData = req.body;
     addPoll(poll);
     res.end();
@@ -23,7 +23,7 @@ app.get('/polls', async (req,res)=>{
     res.end();
 });
 
-app.post('/poll', json(), async (req, res)=>{
+app.put('/poll', json(), async (req, res)=>{
     res.set('Access-Control-Allow-Origin', '*');
     await updatePoll(req.body);
     res.end();

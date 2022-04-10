@@ -32,7 +32,7 @@ export default function Poll() {
         const newPoll = JSON.parse(JSON.stringify(poll));
         newPoll.recepients.push(recepient);
         await fetch("http://localhost:5019/poll", {
-            method: "POST",
+            method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
             },

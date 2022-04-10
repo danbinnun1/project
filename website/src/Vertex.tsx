@@ -43,7 +43,7 @@ export default function Vertex(props: any) {
         });
         props.onMouseUp(props.id);
         console.log(inputRef.current);
-    }, []);
+    }, [props.id]);
 
     const onMouseMove = React.useCallback((e: any) => {
         if (!stateRef.current.dragging) {
@@ -52,7 +52,7 @@ export default function Vertex(props: any) {
         props.positionChanged(e.pageX - stateRef.current.relX, e.pageY - stateRef.current.relY, props.id);
         e.stopPropagation();
         e.preventDefault();
-    }, []);
+    }, [props.id]);
 
     function onMouseDown(e: any) {
         if (e.button !== 0) {

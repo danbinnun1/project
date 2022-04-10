@@ -4,14 +4,14 @@ import { awaitResponse } from "./flow";
 
 export interface Edge {
     question: string,
-    to: string,
+    to: number,
     category?: string
 }
 
 export interface Poll {
-    start: string,
-    vertexes: string[],
-    edges: { [from: string]: Edge[] }
+    start: number,
+    vertexes: {[id: number]: string},
+    edges: { [from: number]: Edge[] }
 }
 
 export interface PollData {
@@ -26,7 +26,7 @@ export interface PollData {
 export type PollDataDB = PollData  & { _id: any };
 
 export interface Submission {
-    path: string[],
+    path: number[],
     categories: {[key: string]: string}
 }
 
@@ -47,7 +47,7 @@ export async function startPoll(pollData: PollDataDB, client: Client) {
                 MessageTypes.BUTTONS_RESPONSE,
                 undefined, undefined,
                 poll.edges[current].map(edge => edge.question),
-                current);
+                poll.vertexes[current]);
             let selected = poll.edges[current].filter(edge => edge.question === response.text)[0];
             if (selected.category){
                 categories[selected.category] = selected.question;
@@ -55,7 +55,7 @@ export async function startPoll(pollData: PollDataDB, client: Client) {
             current = selected.to;
             path.push(current);
             if (!poll.edges[current] || poll.edges[current].length === 0) {
-                await client.sendText(recepient, current);
+                await client.sendText(recepient, poll.vertexes[current]);
                 let submission: Submission = {path, categories};
                 addSubmission(submission, pollData, recepient);
                 break;
