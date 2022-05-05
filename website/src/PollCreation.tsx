@@ -1,10 +1,44 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import useState from 'react-usestateref';
 import Edge from './Edge';
 import Vertex from "./Vertex";
 
-export default function PollCreation() {
-    const [vertexes, setVertexes, vertexesRef] = useState<{ x: number, y: number, dragging: boolean, text: string, id: number }[]>([]);
+export default function PollCreation(props: any) {
+    let params = useParams();
+    let location = useLocation();
+
+    useEffect(() => {
+        async function fetchData() {
+            const searchParams = new URLSearchParams(location.search);
+            if (searchParams.has('poll')) {
+                let response = await fetch("http://localhost:5019/poll?username=" + params.username + "&name=" + searchParams.get('poll'));
+                let poll = await response.json();
+                setVertexes(Object.values(poll.poll.vertexes).map((v: any) => ({ ...v, dragging: false })) as any);
+                setExisting(true);
+                setStart(poll.poll.start);
+                setPollName(poll.name);
+                set_id(poll._id);
+                let edges = [];
+
+                for (let i = 0; i < Object.keys(poll.poll.vertexes).length; i++) {
+                    for (let e of poll.poll.edges[i]) {
+                        edges.push({ src: i, dest: e.to, text: e.question });
+                    }
+                }
+                setEdges(edges);
+
+            }
+        }
+        fetchData();
+    }, [location]);
+
+    const [_id, set_id] = useState('');
+    const [existing, setExisting] = useState(false);
+    const [vertexes, setVertexes, vertexesRef] = useState<{
+        x: number, y: number,
+        dragging: boolean, text: string, id: number
+    }[]>([]);
     const [edges, setEdges, edgesRef] = useState<{ src: number, dest: number, text: string }[]>([]);
     const [addingEdge, setAddingEdge] = useState(false);
     const [selectedVertex, setSelectedVertex] = useState(-1);
@@ -14,9 +48,8 @@ export default function PollCreation() {
     const [pollName, setPollName] = useState('');
     const [done, setDone] = useState(false);
     const [start, setStart] = useState(-1);
-    
+
     const vertexSize = 50;
-    let params = useParams();
 
     function positionChanged(x: number, y: number, id: number) {
         const index = vertexById(id);
@@ -62,7 +95,7 @@ export default function PollCreation() {
                             setVertexes(newVertexes);
                         }} value={vertexName}></input>
                         <br></br>
-                        <input type='checkbox' onChange={() => {
+                        <input type='checkbox' checked={selectedVertex === start} onChange={() => {
                             if (selectedVertex === start) {
                                 setStart(-1);
                             }
@@ -122,40 +155,65 @@ export default function PollCreation() {
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
                     }}><button onClick={() => {
                         setAddingEdge(true);
-                    }}></button></th>
+                    }}>Add edge</button></th>
+                    <th style={{
+                        width: '20%', height: '100%',
+                        borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
+                    }}><button onClick={() => {
+                        setDone(true);
+                    }}>cancel</button></th>
                     <th style={{
                         width: '20%', height: '100%',
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
                     }}>
-                        <input onChange={(e: any) => {
+                        {existing ? null : <input onChange={(e: any) => {
                             setPollName(e.target.value);
-                        }}></input>
+                        }}></input>}
                         <button onClick={() => {
-                            let poll: any = { vertexes: {}, edges: {} };
+                            let poll: any = { vertexes: {}, edges: {}, start };
                             vertexesRef.current.forEach((vertex, index) => {
-                                poll.vertexes[vertex.id] = vertex.text;
+                                poll.vertexes[vertex.id] = vertex;
                                 poll.edges[vertex.id] = []
                                 for (const edge of edgesRef.current) {
                                     if (edge.src === vertex.id) {
                                         poll.edges[vertex.id].push({
                                             question: edge.text,
-                                            to: vertexesRef.current[edge.dest]
+                                            to: vertexesRef.current[edge.dest].id
                                         });
                                     }
                                 }
                             });
-                            const pollData = {
-                                poll, username: params.username,
-                                name: pollName, isActive: false,
-                                submissions: [], recepients: []
-                            };
-                            fetch("http://localhost:5019/poll", {
-                                method: "POST",
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify(pollData)
-                            });
+                            if (existing){
+                                const pollData = {
+                                    poll, username: params.username,
+                                    name: pollName,
+                                    submissions: [], recepients: [],
+                                    _id, status: 'NOT_ACTIVE'
+                                };
+                                fetch("http://localhost:5019/poll", {
+                                    method: "PUT",
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(pollData)
+                                });
+                            }
+                            else{
+                                const pollData = {
+                                    poll, username: params.username,
+                                    name: pollName,
+                                    submissions: [], recepients: [],
+                                    status: 'NOT_ACTIVE'
+                                };
+                                fetch("http://localhost:5019/poll", {
+                                    method: "POST",
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(pollData)
+                                });
+                            }
+
                             setDone(true);
                         }}>submit</button>
                     </th>

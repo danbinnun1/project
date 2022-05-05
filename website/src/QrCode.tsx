@@ -42,7 +42,7 @@ function Qr(props: any) {
 
     //const response = await fetch('localhost:5019?id=8');
     if (finished){
-        return <Navigate to='/userpage'></Navigate>
+        return <Navigate to={'/userpage/'+props.username}></Navigate>
     }
 
     return (

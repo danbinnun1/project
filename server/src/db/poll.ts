@@ -7,7 +7,7 @@ import { Poll, PollData, PollDataDB, Submission } from "../poll";
 
 const pollSchema = new Schema<PollData>({}, { strict: false });
 
-const PollModel = model<PollData>("poll", pollSchema);
+export const PollModel = model<PollData>("poll", pollSchema);
 
 export const addPoll = (poll: PollData) => {
     const doc = new PollModel(poll);
@@ -21,7 +21,7 @@ export async function findByNameAndUsername(name: string, username: string):
 
 
 export const addSubmission = async (submission: Submission, poll: PollDataDB, user: string) => {
-    poll.submissions[user]=submission;
+    poll.submissions[user] = submission;
     updatePoll(poll);
 }
 
@@ -29,6 +29,7 @@ export const getPolls = async (username: string) => {
     return await PollModel.find({ username });
 }
 
-export async function updatePoll(poll:PollDataDB){
+export async function updatePoll(poll: PollDataDB) {
+    console.log(poll);
     await PollModel.findByIdAndUpdate(poll._id, poll);
 }

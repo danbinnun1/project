@@ -20,6 +20,7 @@ export default function UserPage() {
 
     return (
         <div>
+            <a href={"/new_poll/"+params.username} className='btn btn-primary' >new poll</a>
             <table>
                 {polls.map(poll =>
                     <tr>

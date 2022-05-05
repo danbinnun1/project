@@ -5,13 +5,14 @@ const app = express();
 import cors from 'cors';
 import { add, connectToDb } from "./db/user";
 import { addPoll, findByNameAndUsername, getPolls, updatePoll } from "./db/poll";
-import { PollData, startPoll } from "./poll";
+import { PollData, PollDataDB, startPoll } from "./poll";
 import { clients, tryLogin } from "./clients_registry";
 import { Client, ContactId } from "@open-wa/wa-automate";
 
 
 app.post('/poll', json(), async (req, res) => {
-    let poll: PollData = req.body;
+    res.set('Access-Control-Allow-Origin', '*');
+    let poll: PollDataDB = req.body;
     addPoll(poll);
     res.end();
 })
@@ -38,6 +39,7 @@ app.get('/poll', async (req, res)=>{
 })
 
 app.get('/send_poll', async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     let username: string = req.query.username as string;
     const pollName: string = req.query.name as string;
     const poll = await findByNameAndUsername(pollName, username);
