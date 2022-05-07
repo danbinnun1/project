@@ -4,6 +4,19 @@ import useState from 'react-usestateref';
 import Edge from './Edge';
 import Vertex from "./Vertex";
 
+async function toBase64(file: File) {
+    return await new Promise((resolve, reject) => {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            console.log(reader.result);
+            resolve(reader.result);
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
+    })
+}
 export default function PollCreation(props: any) {
     let params = useParams();
     let location = useLocation();
@@ -37,7 +50,7 @@ export default function PollCreation(props: any) {
     const [existing, setExisting] = useState(false);
     const [vertexes, setVertexes, vertexesRef] = useState<{
         x: number, y: number,
-        dragging: boolean, text: string, id: number
+        dragging: boolean, text: string, id: number, image?: any
     }[]>([]);
     const [edges, setEdges, edgesRef] = useState<{ src: number, dest: number, text: string }[]>([]);
     const [addingEdge, setAddingEdge] = useState(false);
@@ -103,6 +116,26 @@ export default function PollCreation(props: any) {
                                 setStart(selectedVertex);
                             }
                         }}></input>
+                        <input
+                            type='file'
+                            onChange={(event: any) => {
+                                if (selectedVertex !== -1) {
+                                    let newVertexes = [...vertexesRef.current];
+                                    const index = vertexById(selectedVertex);
+                                    newVertexes[index].image = event.target.files[0];
+                                    setVertexes(newVertexes);
+                                }
+                            }}
+                        >
+                        </input>
+                        {
+                            selectedVertex !== -1 && !!vertexesRef.current[vertexById(selectedVertex)].image ?
+                                (<img alt="not fount" width={"250px"}
+                                    src={URL.createObjectURL(vertexesRef.current
+                                    [vertexById(selectedVertex)].image)} />) : null
+
+                        }
+
                     </th>
                 </tr>
                 <tr style={{
@@ -169,10 +202,14 @@ export default function PollCreation(props: any) {
                         {existing ? null : <input onChange={(e: any) => {
                             setPollName(e.target.value);
                         }}></input>}
-                        <button onClick={() => {
+                        <button onClick={async () => {
                             let poll: any = { vertexes: {}, edges: {}, start };
-                            vertexesRef.current.forEach((vertex, index) => {
+                            for (let vertex of vertexesRef.current) {
                                 poll.vertexes[vertex.id] = vertex;
+                                if (vertex.image) {
+                                    poll.vertexes[vertex.id].image = await toBase64(vertex.image);
+                                }
+                                console.log(1234);
                                 poll.edges[vertex.id] = []
                                 for (const edge of edgesRef.current) {
                                     if (edge.src === vertex.id) {
@@ -182,8 +219,8 @@ export default function PollCreation(props: any) {
                                         });
                                     }
                                 }
-                            });
-                            if (existing){
+                            };
+                            if (existing) {
                                 const pollData = {
                                     poll, username: params.username,
                                     name: pollName,
@@ -198,7 +235,7 @@ export default function PollCreation(props: any) {
                                     body: JSON.stringify(pollData)
                                 });
                             }
-                            else{
+                            else {
                                 const pollData = {
                                     poll, username: params.username,
                                     name: pollName,

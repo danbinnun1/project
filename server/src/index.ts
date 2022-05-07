@@ -1,7 +1,9 @@
 import console from "console";
 import express from 'express';
-import { json } from 'body-parser';
+import bodyParser, { json } from 'body-parser';
 const app = express();
+app.use(bodyParser({limit: '50mb'}));
+
 import cors from 'cors';
 import { add, connectToDb } from "./db/user";
 import { addPoll, findByNameAndUsername, getPolls, updatePoll } from "./db/poll";
@@ -65,3 +67,8 @@ app.get('/login', async (req, res) => {
 connectToDb().then(() => console.log("connected to mongo"));
 app.listen(5019, () => console.log('AKDHAKsdh'));
 app.use(cors());
+var jsonParser       = bodyParser.json({limit:1024*1024*20, type:'application/json'});
+var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:1024*1024*20,type:'application/x-www-form-urlencoded' })
+
+app.use(jsonParser);
+app.use(urlencodedParser);
