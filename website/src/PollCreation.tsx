@@ -118,11 +118,11 @@ export default function PollCreation(props: any) {
                         }}></input>
                         <input
                             type='file'
-                            onChange={(event: any) => {
+                            onChange={async (event: any) => {
                                 if (selectedVertex !== -1) {
                                     let newVertexes = [...vertexesRef.current];
                                     const index = vertexById(selectedVertex);
-                                    newVertexes[index].image = event.target.files[0];
+                                    newVertexes[index].image = await toBase64(event.target.files[0]);
                                     setVertexes(newVertexes);
                                 }
                             }}
@@ -130,11 +130,19 @@ export default function PollCreation(props: any) {
                         </input>
                         {
                             selectedVertex !== -1 && !!vertexesRef.current[vertexById(selectedVertex)].image ?
-                                (<img alt="not fount" width={"250px"}
-                                    src={URL.createObjectURL(vertexesRef.current
-                                    [vertexById(selectedVertex)].image)} />) : null
+                                (<img alt="not found" width={"250px"}
+                                    src={vertexesRef.current[vertexById(selectedVertex)].image} />) : null
 
                         }
+                        <button onClick={() => {
+                            let newVertexes = [...vertexesRef.current];
+                            newVertexes = newVertexes.filter(item => item.id !== selectedVertex);
+                            const newEdges = edgesRef.current.filter(item => item.src !== selectedVertex
+                                && item.dest !== selectedVertex);
+                            setEdges(newEdges);
+                            setVertexes(newVertexes);
+                            setSelectedVertex(-1)
+                        }}>remove</button>
 
                     </th>
                 </tr>
@@ -207,7 +215,7 @@ export default function PollCreation(props: any) {
                             for (let vertex of vertexesRef.current) {
                                 poll.vertexes[vertex.id] = vertex;
                                 if (vertex.image) {
-                                    poll.vertexes[vertex.id].image = await toBase64(vertex.image);
+                                    poll.vertexes[vertex.id].image = vertex.image;
                                 }
                                 console.log(1234);
                                 poll.edges[vertex.id] = []
