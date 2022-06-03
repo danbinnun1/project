@@ -65,6 +65,11 @@ export default function PollCreation(props: any) {
     const vertexSize = 50;
 
     function positionChanged(x: number, y: number, id: number) {
+        if (y + vertexSize >= window.innerHeight * 0.9 ||
+            y <= window.innerHeight * 0.1 ||
+            x + vertexSize >= window.innerWidth * 0.8) {
+            return;
+        }
         const index = vertexById(id);
         let newVertexes = [...vertexesRef.current];
         newVertexes[index].x = x;
@@ -100,7 +105,7 @@ export default function PollCreation(props: any) {
                     width: '100%', height: '50%',
                 }}>
                     <th style={{ borderWidth: '1px', borderColor: 'black', borderStyle: 'solid' }}>
-                        <input onChange={(e: any) => {
+                        <input disabled={selectedVertex === -1} onChange={(e: any) => {
                             setVertexName(e.target.value);
                             let newVertexes = [...vertexesRef.current];
                             const index = vertexById(selectedVertex);
@@ -108,7 +113,7 @@ export default function PollCreation(props: any) {
                             setVertexes(newVertexes);
                         }} value={vertexName}></input>
                         <br></br>
-                        <input type='checkbox' checked={selectedVertex === start} onChange={() => {
+                        <input disabled={selectedVertex === -1} type='checkbox' checked={selectedVertex === start} onChange={() => {
                             if (selectedVertex === start) {
                                 setStart(-1);
                             }
@@ -116,7 +121,7 @@ export default function PollCreation(props: any) {
                                 setStart(selectedVertex);
                             }
                         }}></input>
-                        <input
+                        <input disabled={selectedVertex === -1}
                             type='file'
                             onChange={async (event: any) => {
                                 if (selectedVertex !== -1) {
@@ -134,14 +139,14 @@ export default function PollCreation(props: any) {
                                     src={vertexesRef.current[vertexById(selectedVertex)].image} />) : null
 
                         }
-                        <button onClick={() => {
+                        <button disabled={selectedVertex === -1} onClick={() => {
                             let newVertexes = [...vertexesRef.current];
                             newVertexes = newVertexes.filter(item => item.id !== selectedVertex);
                             const newEdges = edgesRef.current.filter(item => item.src !== selectedVertex
                                 && item.dest !== selectedVertex);
                             setEdges(newEdges);
                             setVertexes(newVertexes);
-                            setSelectedVertex(-1)
+                            setSelectedVertex(-1);
                         }}>remove</button>
 
                     </th>
@@ -152,12 +157,27 @@ export default function PollCreation(props: any) {
                     <th style={{
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
                     }}>
-                        <input onChange={(e: any) => {
+                        <input disabled={selectedEdge === -1} onChange={(e: any) => {
                             setEdgeName(e.target.value);
                             let newEdges = [...edgesRef.current];
                             newEdges[selectedEdge].text = e.target.value;
                             setEdges(newEdges);
                         }} value={edgeName}></input>
+                        <button disabled={selectedEdge === -1} onClick={() => {
+                            let newEdges = [...edgesRef.current];
+                            newEdges.splice(selectedEdge, 1);
+                            setSelectedEdge(-1);
+                            setEdges(newEdges);
+                        }}>remove</button>
+                        <button disabled={selectedEdge === -1} onClick={()=>{
+                            const temp=edgesRef.current[selectedEdge].src;
+                            let newEdges = [...edgesRef.current];
+                            newEdges[selectedEdge].src=newEdges[selectedEdge].dest;
+                            newEdges[selectedEdge].dest=temp;
+                            setEdges(newEdges);
+                        }}>
+                            switch direction
+                        </button>
                     </th>
                 </tr>
             </table>
@@ -188,6 +208,9 @@ export default function PollCreation(props: any) {
                                 dragging: true, text: '',
                                 id: vertexesRef.current.length === 0 ? 0 : vertexesRef.current[vertexesRef.current.length - 1].id + 1
                             });
+                            if (newVertexes.length ===1){
+                                setSelectedVertex(newVertexes[0].id);
+                            }
                             setVertexes(newVertexes);
                         }}></div>
                     </th>
@@ -196,6 +219,7 @@ export default function PollCreation(props: any) {
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
                     }}><button onClick={() => {
                         setAddingEdge(true);
+                        setSelectedVertex(-1);
                     }}>Add edge</button></th>
                     <th style={{
                         width: '20%', height: '100%',
@@ -274,7 +298,7 @@ export default function PollCreation(props: any) {
             <Edge x1={vertexes[vertexById(edge.src)].x + vertexSize / 2} x2={vertexes[vertexById(edge.dest)].x + vertexSize / 2}
                 y1={vertexes[vertexById(edge.src)].y + vertexSize / 2}
                 y2={vertexes[vertexById(edge.dest)].y + vertexSize / 2}
-                height={10}
+                height={40}
                 onClick={() => {
                     setSelectedEdge(index);
                     setEdgeName(edgesRef.current[index].text);
