@@ -41,40 +41,42 @@ export async function startPoll(pollData: PollDataDB, client: Client) {
                 console.log("Updated User : ", docs);
             }
         }).clone();
-    pollData.status='ACTIVE';
+    pollData.status = 'ACTIVE';
     const poll = pollData.poll;
     for (let recepient of pollData.recepients) {
-        let current = poll.start;
-        let path = [current];
-        let categories: { [key: string]: string } = {};
-        while (true) {
-            console.log('abcd');
-            if ((poll.vertexes[current] as any).image){
-                client.sendImage(recepient, (poll.vertexes[current] as any).image,'a.png','');
-            }
-            const response = await awaitResponse(client,
-                recepient,
-                recepient,
-                undefined,
-                "choose an option",
-                MessageTypes.BUTTONS_RESPONSE,
-                undefined, undefined,
-                poll.edges[current].map(edge => edge.question),
-                (poll.vertexes[current] as any).text);
+        (async () => {
+            let current = poll.start;
+            let path = [current];
+            let categories: { [key: string]: string } = {};
+            while (true) {
+                console.log('abcd');
+                if ((poll.vertexes[current] as any).image) {
+                    client.sendImage(recepient, (poll.vertexes[current] as any).image, 'a.png', '');
+                }
+                const response = await awaitResponse(client,
+                    recepient,
+                    recepient,
+                    undefined,
+                    "choose an option",
+                    MessageTypes.BUTTONS_RESPONSE,
+                    undefined, undefined,
+                    poll.edges[current].map(edge => edge.question),
+                    (poll.vertexes[current] as any).text);
                 console.log(1234);
-            let selected: any = poll.edges[current].filter(edge => edge.question === response.text)[0];
-            if (selected.category && selected.category !== 'no category') {
-                categories[selected.category] = selected.question;
+                let selected: any = poll.edges[current].filter(edge => edge.question === response.text)[0];
+                if (selected.category && selected.category !== 'no category') {
+                    categories[selected.category] = selected.question;
+                }
+                current = selected.to;
+                path.push(current);
+                if (!poll.edges[current] || poll.edges[current].length === 0) {
+                    await client.sendText(recepient, (poll.vertexes[current] as any).text);
+                    let submission: Submission = { path, categories };
+                    addSubmission(submission, pollData, recepient);
+                    break;
+                }
             }
-            current = selected.to;
-            path.push(current);
-            if (!poll.edges[current] || poll.edges[current].length === 0) {
-                await client.sendText(recepient, (poll.vertexes[current] as any).text);
-                let submission: Submission = { path, categories };
-                addSubmission(submission, pollData, recepient);
-                break;
-            }
-        }
+        })();
 
     }
     //return path;
