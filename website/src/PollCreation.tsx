@@ -38,11 +38,11 @@ export default function PollCreation(props: any) {
 
                 for (let i = 0; i < Object.keys(poll.poll.vertexes).length; i++) {
                     for (let e of poll.poll.edges[i]) {
-                        edges.push({ src: i, dest: e.to, text: e.question, category: (!!e.category)?e.category:'' });
+                        edges.push({ src: i, dest: e.to, text: e.question, category: (!!e.category) ? e.category : '' });
                     }
                 }
                 setEdges(edges);
-
+                setCategories(['no category'].concat(poll.categories));
             }
         }
         fetchData();
@@ -184,7 +184,7 @@ export default function PollCreation(props: any) {
                         </button>
                         <br></br>
                         <select disabled={selectedEdge === -1}
-                            value={selectedEdge===-1? '': edgesRef.current[selectedEdge].category} onChange={(e: any) => {
+                            value={selectedEdge === -1 ? '' : edgesRef.current[selectedEdge].category} onChange={(e: any) => {
                                 let newEdges = [...edgesRef.current];
                                 newEdges[selectedEdge].category = e.target.value;
                                 setEdges(newEdges);
@@ -262,7 +262,8 @@ export default function PollCreation(props: any) {
                                     if (edge.src === vertex.id) {
                                         poll.edges[vertex.id].push({
                                             question: edge.text,
-                                            to: vertexesRef.current[edge.dest].id
+                                            to: vertexesRef.current[edge.dest].id,
+                                            category: edge.category
                                         });
                                     }
                                 }
@@ -271,8 +272,9 @@ export default function PollCreation(props: any) {
                                 const pollData = {
                                     poll, username: params.username,
                                     name: pollName,
-                                    submissions: [], recepients: [],
-                                    _id, status: 'NOT_ACTIVE'
+                                    submissions: {}, recepients: [],
+                                    _id, status: 'NOT_ACTIVE',
+                                    categories
                                 };
                                 fetch("http://localhost:5019/poll", {
                                     method: "PUT",
@@ -286,8 +288,9 @@ export default function PollCreation(props: any) {
                                 const pollData = {
                                     poll, username: params.username,
                                     name: pollName,
-                                    submissions: [], recepients: [],
-                                    status: 'NOT_ACTIVE'
+                                    submissions: {}, recepients: [],
+                                    status: 'NOT_ACTIVE',
+                                    categories: categories.filter(c => c !== 'no category')
                                 };
                                 fetch("http://localhost:5019/poll", {
                                     method: "POST",

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import RecepientsList from "./RecepientsList";
+import { PieChart } from 'react-minimal-pie-chart';
+
 
 
 export default function Poll() {
@@ -9,11 +11,29 @@ export default function Poll() {
     let params = useParams();
     let [poll, setPoll] = useState<any>();
     let [time, setTime] = useState(-1);
+    const [categories, setCategories] = useState<{
+        [name: string]:
+        { [result: string]: number }
+    }>({});
     useEffect(() => {
         async function fetchData() {
             let response = await fetch("http://localhost:5019/poll?username=" + params.username + "&name=" + params.pollName);
             let responseJson = await response.json();
             setPoll(responseJson);
+            let newCategories: any = {};
+            for (let recepient in responseJson.submissions) {
+                let submission = responseJson.submissions[recepient];
+                for (let category in submission.categories) {
+                    if (!newCategories[category]) {
+                        newCategories[category] = {};
+                    }
+                    if (!newCategories[category][submission.categories[category]]) {
+                        newCategories[category][submission.categories[category]] = 0;
+                    }
+                    newCategories[category][submission.categories[category]] += 1;
+                }
+            }
+            setCategories(newCategories);
         }
         fetchData();
     }, [value]);
@@ -86,8 +106,8 @@ export default function Poll() {
                     <div>
                         <button onClick={async () => {
                             const newPoll = JSON.parse(JSON.stringify(poll));
-                            newPoll.submissions=[];
-                            newPoll.status='READY';
+                            newPoll.submissions = {};
+                            newPoll.status = 'READY';
                             await fetch("http://localhost:5019/poll", {
                                 method: "PUT",
                                 headers: {
@@ -109,6 +129,16 @@ export default function Poll() {
                 }
             })()}
             <RecepientsList remove={removeRecepient} add={addRecepient} recepients={poll === undefined ? [] : poll.recepients}></RecepientsList>
+            {Object.keys(categories).map((category: any) => (
+                <div>
+                    <PieChart
+                        data={Object.keys(categories[category])
+                            .map((key) => ({
+                                title: key,
+                                value: categories[category][key], color: '#E38627'
+                            }))}></PieChart>
+                </div>
+            ))}
         </div>
     )
 }

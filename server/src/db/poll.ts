@@ -16,7 +16,7 @@ export const addPoll = (poll: PollData) => {
 
 export async function findByNameAndUsername(name: string, username: string):
     Promise<(PollData & { _id: any }) | null> {
-    return await PollModel.findOne({ name, username }).exec();
+    return await PollModel.findOne({ name, username }).clone();
 }
 
 
@@ -31,5 +31,6 @@ export const getPolls = async (username: string) => {
 
 export async function updatePoll(poll: PollDataDB) {
     console.log(poll);
-    await PollModel.findByIdAndUpdate(poll._id, poll);
+    await PollModel.findByIdAndUpdate(poll._id, poll).clone();
+    console.log(871234);
 }
