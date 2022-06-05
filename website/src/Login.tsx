@@ -33,6 +33,19 @@ export default function Login() {
     // Handling the form submission
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+        let response = await fetch('http://localhost:5019/users');
+        console.log('123');
+        let users=await response.json();
+        let exists=false;
+        for (let user of users){
+            if (user.username === name && user.password==password){
+                exists=true;
+            }
+        }
+        if (!exists){
+            alert('user does not exist');
+            return;
+        }
         if (name === '' || password === '') {
             setError(true);
         } else {

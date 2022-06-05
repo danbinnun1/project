@@ -34,11 +34,12 @@ export default function PollCreation(props: any) {
                 setStart(poll.poll.start);
                 setPollName(poll.name);
                 set_id(poll._id);
+                setRecepients(poll.recepients);
                 let edges = [];
 
                 for (let i = 0; i < Object.keys(poll.poll.vertexes).length; i++) {
-                    for (let e of poll.poll.edges[i]) {
-                        edges.push({ src: i, dest: e.to, text: e.question, category: (!!e.category) ? e.category : '' });
+                    for (let e of poll.poll.edges[vertexesRef.current[i].id]) {
+                        edges.push({ src: vertexesRef.current[i].id, dest: e.to, text: e.question, category: (!!e.category) ? e.category : '' });
                     }
                 }
                 setEdges(edges);
@@ -48,6 +49,7 @@ export default function PollCreation(props: any) {
         fetchData();
     }, [location]);
 
+    const [recepients, setRecepients] = useState([]);
     const [_id, set_id] = useState('');
     const [existing, setExisting] = useState(false);
     const [vertexes, setVertexes, vertexesRef] = useState<{
@@ -250,31 +252,63 @@ export default function PollCreation(props: any) {
                             setPollName(e.target.value);
                         }}></input>}
                         <button onClick={async () => {
+                            if (vertexesRef.current.filter((vertex) => vertex.id === start).length === 0) {
+                                alert('set a vertex as start.');
+                                return;
+                            }
+                            let response = await fetch("http://localhost:5019/polls?username=" + params.username);
+                            let polls = await response.json();
+                            for (let i of polls){
+                                if (i.name===pollName &&!existing){
+                                    alert('poll name already exists');
+                                    return;
+                                }
+                            }
+                            if (''===pollName){
+                                alert('poll name cannot be empty');
+                                return;
+                            }
                             let poll: any = { vertexes: {}, edges: {}, start };
                             for (let vertex of vertexesRef.current) {
+                                if (vertex.text===''){
+                                    alert('all vertexes must have text');
+                                    return;
+                                }
                                 poll.vertexes[vertex.id] = vertex;
                                 if (vertex.image) {
                                     poll.vertexes[vertex.id].image = vertex.image;
                                 }
                                 console.log(1234);
                                 poll.edges[vertex.id] = [];
+                                let startEdgesExist=false;
                                 for (const edge of edgesRef.current) {
+                                    if (edge.text===''){
+                                        alert('all edges must have text');
+                                        return;
+                                    }
                                     if (edge.src === vertex.id) {
                                         poll.edges[vertex.id].push({
                                             question: edge.text,
-                                            to: vertexesRef.current[edge.dest].id,
+                                            to: edge.dest,
                                             category: edge.category
                                         });
+                                        if(start===vertex.id){
+                                            startEdgesExist=true;
+                                        }
                                     }
+                                }
+                                if (!startEdgesExist&&start===vertex.id){
+                                    alert('add edges to the start vertex')
+                                    return;
                                 }
                             };
                             if (existing) {
                                 const pollData = {
                                     poll, username: params.username,
                                     name: pollName,
-                                    submissions: {}, recepients: [],
+                                    submissions: {}, recepients: recepients ?? [],
                                     _id, status: 'NOT_ACTIVE',
-                                    categories
+                                    categories: categories.filter(c => c !== 'no category')
                                 };
                                 fetch("http://localhost:5019/poll", {
                                     method: "PUT",
@@ -288,7 +322,7 @@ export default function PollCreation(props: any) {
                                 const pollData = {
                                     poll, username: params.username,
                                     name: pollName,
-                                    submissions: {}, recepients: [],
+                                    submissions: {}, recepients: recepients ?? [],
                                     status: 'NOT_ACTIVE',
                                     categories: categories.filter(c => c !== 'no category')
                                 };

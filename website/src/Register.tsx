@@ -28,6 +28,14 @@ export default function Register() {
 
     // Handling the form submission
     const handleSubmit = async (e: any) => {
+        let response = await fetch('http://localhost:5019/users');
+        let users=await response.json();
+        for (let user of users){
+            if (user.username === name){
+                alert('user already exists!');
+                return;
+            }
+        }
         e.preventDefault();
         if (name === '' || password === '') {
             setError(true);

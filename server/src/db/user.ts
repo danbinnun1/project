@@ -19,6 +19,10 @@ export const add = (user: User) => {
     doc.save();
 }
 
+export const getUsers = async () => {
+    return await UserModel.find({});
+}
+
 export const exists = (user: User): boolean => {
     let a = UserModel.exists(user);
     return true;

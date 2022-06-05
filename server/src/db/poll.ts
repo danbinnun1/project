@@ -22,7 +22,7 @@ export async function findByNameAndUsername(name: string, username: string):
 
 export const addSubmission = async (submission: Submission, poll: PollDataDB, user: string) => {
     poll.submissions[user] = submission;
-    updatePoll(poll);
+    updatePoll({_id: poll._id, submissions: poll.submissions} as any);
 }
 
 export const getPolls = async (username: string) => {

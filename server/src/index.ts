@@ -2,15 +2,20 @@ import console from "console";
 import express from 'express';
 import bodyParser, { json } from 'body-parser';
 const app = express();
-app.use(bodyParser({limit: '50mb'}));
+app.use(bodyParser({ limit: '50mb' }));
 
 import cors from 'cors';
-import { add, connectToDb } from "./db/user";
+import { add, connectToDb, getUsers } from "./db/user";
 import { addPoll, findByNameAndUsername, getPolls, updatePoll } from "./db/poll";
 import { PollData, PollDataDB, startPoll } from "./poll";
 import { clients, tryLogin } from "./clients_registry";
 import { Client, ContactId } from "@open-wa/wa-automate";
 
+app.get('/users', async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    let users = await getUsers();
+    res.send(users);
+})
 
 app.post('/poll', json(), async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
@@ -19,20 +24,20 @@ app.post('/poll', json(), async (req, res) => {
     res.end();
 })
 
-app.get('/polls', async (req,res)=>{
+app.get('/polls', async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     let polls = await getPolls(req.query.username as string);
     res.send(polls);
     res.end();
 });
 
-app.put('/poll', json(), async (req, res)=>{
+app.put('/poll', json(), async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     await updatePoll(req.body);
     res.end();
 })
 
-app.get('/poll', async (req, res)=>{
+app.get('/poll', async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     let username: string = req.query.username as string;
     const pollName: string = req.query.name as string;
@@ -45,7 +50,7 @@ app.get('/send_poll', async (req, res) => {
     let username: string = req.query.username as string;
     const pollName: string = req.query.name as string;
     const poll = await findByNameAndUsername(pollName, username);
-    startPoll(poll!,clients[username] as Client);
+    startPoll(poll!, clients[username] as Client);
     res.send("good");
 })
 
@@ -67,8 +72,8 @@ app.get('/login', async (req, res) => {
 connectToDb().then(() => console.log("connected to mongo"));
 app.listen(5019, () => console.log('AKDHAKsdh'));
 app.use(cors());
-var jsonParser       = bodyParser.json({limit:1024*1024*20, type:'application/json'});
-var urlencodedParser = bodyParser.urlencoded({ extended:true,limit:1024*1024*20,type:'application/x-www-form-urlencoded' })
+var jsonParser = bodyParser.json({ limit: 1024 * 1024 * 20, type: 'application/json' });
+var urlencodedParser = bodyParser.urlencoded({ extended: true, limit: 1024 * 1024 * 20, type: 'application/x-www-form-urlencoded' })
 
 app.use(jsonParser);
 app.use(urlencodedParser);

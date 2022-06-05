@@ -41,6 +41,7 @@ export async function startPoll(pollData: PollDataDB, client: Client) {
                 console.log("Updated User : ", docs);
             }
         }).clone();
+    pollData.status='ACTIVE';
     const poll = pollData.poll;
     for (let recepient of pollData.recepients) {
         let current = poll.start;

@@ -6,6 +6,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 
 
 export default function Poll() {
+    const colors=['blue','red','green','yellow','black','orange','purple','pink','grey'];
     const pollTime = 1000000;
     const [value, setValue] = useState(0); // for rerendering
     let params = useParams();
@@ -72,7 +73,7 @@ export default function Poll() {
     }
     const addRecepient = async (recepient: any) => {
         const newPoll = JSON.parse(JSON.stringify(poll));
-        newPoll.recepients.push(recepient);
+        newPoll.recepients.push(recepient + '@c.us');
         await fetch("http://localhost:5019/poll", {
             method: "PUT",
             headers: {
@@ -135,7 +136,7 @@ export default function Poll() {
                         data={Object.keys(categories[category])
                             .map((key) => ({
                                 title: key,
-                                value: categories[category][key], color: '#E38627'
+                                value: categories[category][key], color: colors[Object.keys(categories[category]).indexOf(key)]
                             }))}></PieChart>
                 </div>
             ))}
