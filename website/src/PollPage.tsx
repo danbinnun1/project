@@ -4,7 +4,7 @@ import RecepientsList from "./RecepientsList";
 
 
 export default function Poll() {
-    const pollTime = 10000;
+    const pollTime = 1000000;
     const [value, setValue] = useState(0); // for rerendering
     let params = useParams();
     let [poll, setPoll] = useState<any>();

@@ -3,6 +3,8 @@ import { Navigate, useLocation, useParams } from 'react-router-dom';
 import useState from 'react-usestateref';
 import Edge from './Edge';
 import Vertex from "./Vertex";
+import { DropDownList } from "@progress/kendo-react-dropdowns";
+
 
 async function toBase64(file: File) {
     return await new Promise((resolve, reject) => {
@@ -36,7 +38,7 @@ export default function PollCreation(props: any) {
 
                 for (let i = 0; i < Object.keys(poll.poll.vertexes).length; i++) {
                     for (let e of poll.poll.edges[i]) {
-                        edges.push({ src: i, dest: e.to, text: e.question });
+                        edges.push({ src: i, dest: e.to, text: e.question, category: (!!e.category)?e.category:'' });
                     }
                 }
                 setEdges(edges);
@@ -52,7 +54,7 @@ export default function PollCreation(props: any) {
         x: number, y: number,
         dragging: boolean, text: string, id: number, image?: any
     }[]>([]);
-    const [edges, setEdges, edgesRef] = useState<{ src: number, dest: number, text: string }[]>([]);
+    const [edges, setEdges, edgesRef] = useState<{ src: number, dest: number, text: string, category: string }[]>([]);
     const [addingEdge, setAddingEdge] = useState(false);
     const [selectedVertex, setSelectedVertex] = useState(-1);
     const [selectedEdge, setSelectedEdge] = useState(-1);
@@ -61,6 +63,8 @@ export default function PollCreation(props: any) {
     const [pollName, setPollName] = useState('');
     const [done, setDone] = useState(false);
     const [start, setStart] = useState(-1);
+    const [category, setCategory] = useState('');
+    const [categories, setCategories] = useState<string[]>(['no category']);
 
     const vertexSize = 50;
 
@@ -169,15 +173,26 @@ export default function PollCreation(props: any) {
                             setSelectedEdge(-1);
                             setEdges(newEdges);
                         }}>remove</button>
-                        <button disabled={selectedEdge === -1} onClick={()=>{
-                            const temp=edgesRef.current[selectedEdge].src;
+                        <button disabled={selectedEdge === -1} onClick={() => {
+                            const temp = edgesRef.current[selectedEdge].src;
                             let newEdges = [...edgesRef.current];
-                            newEdges[selectedEdge].src=newEdges[selectedEdge].dest;
-                            newEdges[selectedEdge].dest=temp;
+                            newEdges[selectedEdge].src = newEdges[selectedEdge].dest;
+                            newEdges[selectedEdge].dest = temp;
                             setEdges(newEdges);
                         }}>
                             switch direction
                         </button>
+                        <br></br>
+                        <select disabled={selectedEdge === -1}
+                            value={selectedEdge===-1? '': edgesRef.current[selectedEdge].category} onChange={(e: any) => {
+                                let newEdges = [...edgesRef.current];
+                                newEdges[selectedEdge].category = e.target.value;
+                                setEdges(newEdges);
+                            }}>
+                            {categories.map(category => (
+                                <option value={category}>{category}</option>
+                            ))}
+                        </select>
                     </th>
                 </tr>
             </table>
@@ -208,7 +223,7 @@ export default function PollCreation(props: any) {
                                 dragging: true, text: '',
                                 id: vertexesRef.current.length === 0 ? 0 : vertexesRef.current[vertexesRef.current.length - 1].id + 1
                             });
-                            if (newVertexes.length ===1){
+                            if (newVertexes.length === 1) {
                                 setSelectedVertex(newVertexes[0].id);
                             }
                             setVertexes(newVertexes);
@@ -242,7 +257,7 @@ export default function PollCreation(props: any) {
                                     poll.vertexes[vertex.id].image = vertex.image;
                                 }
                                 console.log(1234);
-                                poll.edges[vertex.id] = []
+                                poll.edges[vertex.id] = [];
                                 for (const edge of edgesRef.current) {
                                     if (edge.src === vertex.id) {
                                         poll.edges[vertex.id].push({
@@ -286,6 +301,20 @@ export default function PollCreation(props: any) {
                             setDone(true);
                         }}>submit</button>
                     </th>
+                    <th style={{
+                        width: '20%', height: '100%',
+                        borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
+                    }}>
+                        <input onChange={(e: any) => {
+                            setCategory(e.target.value);
+                        }}></input>
+                        <button onClick={() => {
+                            let newCategories = [...categories];
+                            newCategories.push(category);
+                            setCategory('');
+                            setCategories(newCategories)
+                        }}>add category</button>
+                    </th>
                 </tr>
             </table>
         </div>
@@ -312,7 +341,7 @@ export default function PollCreation(props: any) {
                 onClick={() => {
                     if (selectedVertex !== -1 && addingEdge) {
                         let newEdges = [...edgesRef.current];
-                        newEdges.push({ src: selectedVertex, dest: vertex.id, text: '' });
+                        newEdges.push({ src: selectedVertex, dest: vertex.id, text: '', category: '' });
                         setSelectedVertex(-1);
                         setAddingEdge(false);
                         setEdges(newEdges);
