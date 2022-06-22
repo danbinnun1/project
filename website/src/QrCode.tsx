@@ -47,7 +47,7 @@ function Qr(props: any) {
 
     return (
         <div className="App">
-            {image === undefined ? '' : <img src={image} alt="icons"></img>}
+            {image === undefined ? '' : <img src={image} alt=""></img>}
         </div>
     );
 }
