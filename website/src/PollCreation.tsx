@@ -111,7 +111,8 @@ export default function PollCreation(props: any) {
                     width: '100%', height: '50%',
                 }}>
                     <th style={{ borderWidth: '1px', borderColor: 'black', borderStyle: 'solid' }}>
-                        <input disabled={selectedVertex === -1} onChange={(e: any) => {
+                        <label className="label_register_login">Vertex text:</label>
+                        <input className="input_register_login" disabled={selectedVertex === -1} onChange={(e: any) => {
                             setVertexName(e.target.value);
                             let newVertexes = [...vertexesRef.current];
                             const index = vertexById(selectedVertex);
@@ -119,7 +120,9 @@ export default function PollCreation(props: any) {
                             setVertexes(newVertexes);
                         }} value={vertexName}></input>
                         <br></br>
-                        <input disabled={selectedVertex === -1} type='checkbox' checked={selectedVertex === start} onChange={() => {
+                        <br></br>
+                        <label className="label_register_login">Is start vertex:</label>
+                        <input className="input_register_login input_checkbox" disabled={selectedVertex === -1} type='checkbox' checked={selectedVertex === start} onChange={() => {
                             if (selectedVertex === start) {
                                 setStart(-1);
                             }
@@ -127,7 +130,11 @@ export default function PollCreation(props: any) {
                                 setStart(selectedVertex);
                             }
                         }}></input>
-                        <input disabled={selectedVertex === -1}
+                        <br></br>
+                        <br></br>
+                            
+                        <label className="label_register_login">Vertex image:</label>
+                        <input className="input_register_login" disabled={selectedVertex === -1}
                             type='file'
                             onChange={async (event: any) => {
                                 if (selectedVertex !== -1) {
@@ -139,13 +146,17 @@ export default function PollCreation(props: any) {
                             }}
                         >
                         </input>
+                        <br></br>
+                        <br></br>
+                        <br></br>
+
                         {
                             selectedVertex !== -1 && !!vertexesRef.current[vertexById(selectedVertex)].image ?
                                 (<img alt="not found" width={"250px"}
                                     src={vertexesRef.current[vertexById(selectedVertex)].image} />) : null
 
                         }
-                        <button disabled={selectedVertex === -1} onClick={() => {
+                        <button className="button_submit" disabled={selectedVertex === -1} onClick={() => {
                             let newVertexes = [...vertexesRef.current];
                             newVertexes = newVertexes.filter(item => item.id !== selectedVertex);
                             const newEdges = edgesRef.current.filter(item => item.src !== selectedVertex
@@ -153,7 +164,7 @@ export default function PollCreation(props: any) {
                             setEdges(newEdges);
                             setVertexes(newVertexes);
                             setSelectedVertex(-1);
-                        }}>remove</button>
+                        }}>remove vertex</button>
 
                     </th>
                 </tr>
@@ -163,29 +174,18 @@ export default function PollCreation(props: any) {
                     <th style={{
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
                     }}>
-                        <input disabled={selectedEdge === -1} onChange={(e: any) => {
+                        <label className="label_register_login">Edge text:</label>
+                        <input className="input_register_login" disabled={selectedEdge === -1} onChange={(e: any) => {
                             setEdgeName(e.target.value);
                             let newEdges = [...edgesRef.current];
                             newEdges[selectedEdge].text = e.target.value;
                             setEdges(newEdges);
                         }} value={edgeName}></input>
-                        <button disabled={selectedEdge === -1} onClick={() => {
-                            let newEdges = [...edgesRef.current];
-                            newEdges.splice(selectedEdge, 1);
-                            setSelectedEdge(-1);
-                            setEdges(newEdges);
-                        }}>remove</button>
-                        <button disabled={selectedEdge === -1} onClick={() => {
-                            const temp = edgesRef.current[selectedEdge].src;
-                            let newEdges = [...edgesRef.current];
-                            newEdges[selectedEdge].src = newEdges[selectedEdge].dest;
-                            newEdges[selectedEdge].dest = temp;
-                            setEdges(newEdges);
-                        }}>
-                            switch direction
-                        </button>
                         <br></br>
-                        <select disabled={selectedEdge === -1}
+                        <br></br>
+
+                        <label className="label_register_login">Edge category:</label>
+                        <select className="select" disabled={selectedEdge === -1}
                             value={selectedEdge === -1 ? '' : edgesRef.current[selectedEdge].category} onChange={(e: any) => {
                                 let newEdges = [...edgesRef.current];
                                 newEdges[selectedEdge].category = e.target.value;
@@ -195,6 +195,30 @@ export default function PollCreation(props: any) {
                                 <option value={category}>{category}</option>
                             ))}
                         </select>
+                        <br></br>
+
+                        <button className="button_submit" disabled={selectedEdge === -1} onClick={() => {
+                            let newEdges = [...edgesRef.current];
+                            newEdges.splice(selectedEdge, 1);
+                            setSelectedEdge(-1);
+                            setEdges(newEdges);
+                        }}>remove edge</button>
+                        <br></br>
+                        <br></br>
+
+                        <button className="button_submit" disabled={selectedEdge === -1} onClick={() => {
+                            const temp = edgesRef.current[selectedEdge].src;
+                            let newEdges = [...edgesRef.current];
+                            newEdges[selectedEdge].src = newEdges[selectedEdge].dest;
+                            newEdges[selectedEdge].dest = temp;
+                            setEdges(newEdges);
+                        }}>
+                            reverse direction
+                        </button>
+                        <br></br>
+
+                        <br></br>
+
                     </th>
                 </tr>
             </table>
@@ -234,43 +258,43 @@ export default function PollCreation(props: any) {
                     <th style={{
                         width: '20%', height: '100%',
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
-                    }}><button onClick={() => {
+                    }}><button className="button_submit" onClick={() => {
                         setAddingEdge(true);
                         setSelectedVertex(-1);
                     }}>Add edge</button></th>
                     <th style={{
                         width: '20%', height: '100%',
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
-                    }}><button onClick={() => {
+                    }}><button className="button_submit" onClick={() => {
                         setDone(true);
                     }}>cancel</button></th>
                     <th style={{
                         width: '20%', height: '100%',
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
                     }}>
-                        {existing ? null : <input onChange={(e: any) => {
+                        {existing ? null : <input className="input_register_login" onChange={(e: any) => {
                             setPollName(e.target.value);
                         }}></input>}
-                        <button onClick={async () => {
+                        <button className="button_submit" onClick={async () => {
                             if (vertexesRef.current.filter((vertex) => vertex.id === start).length === 0) {
                                 alert('set a vertex as start.');
                                 return;
                             }
                             let response = await fetch("http://localhost:5019/polls?username=" + params.username);
                             let polls = await response.json();
-                            for (let i of polls){
-                                if (i.name===pollName &&!existing){
+                            for (let i of polls) {
+                                if (i.name === pollName && !existing) {
                                     alert('poll name already exists');
                                     return;
                                 }
                             }
-                            if (''===pollName){
+                            if ('' === pollName) {
                                 alert('poll name cannot be empty');
                                 return;
                             }
                             let poll: any = { vertexes: {}, edges: {}, start };
                             for (let vertex of vertexesRef.current) {
-                                if (vertex.text===''){
+                                if (vertex.text === '') {
                                     alert('all vertexes must have text');
                                     return;
                                 }
@@ -280,9 +304,9 @@ export default function PollCreation(props: any) {
                                 }
                                 console.log(1234);
                                 poll.edges[vertex.id] = [];
-                                let startEdgesExist=false;
+                                let startEdgesExist = false;
                                 for (const edge of edgesRef.current) {
-                                    if (edge.text===''){
+                                    if (edge.text === '') {
                                         alert('all edges must have text');
                                         return;
                                     }
@@ -292,12 +316,12 @@ export default function PollCreation(props: any) {
                                             to: edge.dest,
                                             category: edge.category
                                         });
-                                        if(start===vertex.id){
-                                            startEdgesExist=true;
+                                        if (start === vertex.id) {
+                                            startEdgesExist = true;
                                         }
                                     }
                                 }
-                                if (!startEdgesExist&&start===vertex.id){
+                                if (!startEdgesExist && start === vertex.id) {
                                     alert('add edges to the start vertex')
                                     return;
                                 }
@@ -342,10 +366,10 @@ export default function PollCreation(props: any) {
                         width: '20%', height: '100%',
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
                     }}>
-                        <input onChange={(e: any) => {
+                        <input className="input_register_login" onChange={(e: any) => {
                             setCategory(e.target.value);
                         }}></input>
-                        <button onClick={() => {
+                        <button className="button_submit" onClick={() => {
                             let newCategories = [...categories];
                             newCategories.push(category);
                             setCategory('');

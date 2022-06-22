@@ -4,15 +4,16 @@ export default function RecepientsList(props: any) {
     const [newRecepient, setNewRecepient] = useState();
     return <div>
         <form>
-            <label className="label">Name</label>
+        <h2>Poll Participants</h2>
+            <label className="label_register_login">Participant's phone number:</label>
             <input onChange={(e: any) => {
                 setNewRecepient(e.target.value);
-            }} className="input" type="text" />
+            }} className="input_register_login" type="text" />
             <button onClick={(e: any) => {
                 e.preventDefault();
                 props.add(newRecepient);
-            }} className="btn" type="submit">
-                Submit
+            }} className="button_submit" type="submit">
+                Add Participant
             </button>
         </form>
         <table> {props.recepients.map((recepient: any) => (
@@ -23,5 +24,5 @@ export default function RecepientsList(props: any) {
 
 function Recepient(props: any) {
     return <tr><th>{props.name}</th>
-        <th><button onClick={() => props.remove(props.name)}>remove</button></th></tr>
+        <th><button className="button_submit" onClick={() => props.remove(props.name)}>Remove Participant</button></th></tr>
 }

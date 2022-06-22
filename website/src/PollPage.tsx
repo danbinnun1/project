@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
 import RecepientsList from "./RecepientsList";
 import { PieChart } from 'react-minimal-pie-chart';
+import './css.css';
 
 
 
 export default function Poll() {
-    const colors=['blue','red','green','yellow','black','orange','purple','pink','grey'];
+    const colors = ['blue', 'red', 'green', 'yellow', 'black', 'orange', 'purple', 'pink', 'grey'];
     const pollTime = 1000000;
     const [value, setValue] = useState(0); // for rerendering
     let params = useParams();
@@ -88,24 +89,23 @@ export default function Poll() {
         setValue(value => value + 1);
     }
     return (
-        <div>
-            {!!poll ? 'status: ' + poll.status : null}
+        <div className="center_for_poll">
+            <a href={'/new_poll/' + params.username + '?poll=' + params.pollName} className="menu_link center_in_div"><b>edit poll</b></a>
             <br></br>
-            <a href={'/new_poll/' + params.username + '?poll=' + params.pollName}>edit</a>
             <br></br>
+            <h2>{!!poll ? 'Poll Status: ' + poll.status : null}</h2>
             {
                 !!poll && poll.status === 'ACTIVE' ? (
                     <div>
-                        <p>time left:</p>
-                        hours: {Math.floor(time / (1000 * 3600))} minutes: {Math.floor(time / (1000 * 60) % 60)} seconds: {Math.floor(time / (1000) % 60)}
-                        <br></br>
+                        <label className="label_register_login">time left:</label>
+                        <label className="label_register_login">hours: {Math.floor(time / (1000 * 3600))}; minutes: {Math.floor(time / (1000 * 60) % 60)}; seconds: {Math.floor(time / (1000) % 60)}</label>
                     </div>
                 ) : null
             }
             {
                 !!poll && poll.status !== 'READY' ? (
                     <div>
-                        <button onClick={async () => {
+                        <button className="button_submit" onClick={async () => {
                             const newPoll = JSON.parse(JSON.stringify(poll));
                             newPoll.submissions = {};
                             newPoll.status = 'READY';
@@ -125,10 +125,12 @@ export default function Poll() {
             {(() => {
                 if (poll && poll.status === 'READY') {
                     return (
-                        <button onClick={startPoll}>start</button>
+                        <button className="button_submit" onClick={startPoll}>start</button>
                     )
                 }
             })()}
+            <br></br>
+
             <RecepientsList remove={removeRecepient} add={addRecepient} recepients={poll === undefined ? [] : poll.recepients}></RecepientsList>
             {Object.keys(categories).map((category: any) => (
                 <div>

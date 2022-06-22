@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import './css.css';
 
 
 export default function UserPage() {
@@ -19,17 +20,22 @@ export default function UserPage() {
     //let polls = await fetch("localhost:5019/polls?username="+params.username);
 
     return (
-        <div>
-            <a href={"/new_poll/"+params.username} className='btn btn-primary' >new poll</a>
+        <div className="center_for_poll">
+            <a href={"/new_poll/"+params.username} className='menu_link' ><b>Create Poll</b></a>
+            <br></br>
+            <br></br>
+            <br></br>
+            <label className="label_register_login">Existing Polls:</label>
+            <br></br>
             <table>
                 {polls.map(poll =>
                     <tr>
-                        <th><Link to={"/poll/"+params.username+"/"+poll.name} className='btn btn-primary' >{poll.name}</Link>
+                        <th><Link to={"/poll/"+params.username+"/"+poll.name} className='menu_link' >{poll.name}</Link>
                         </th>
-                        <th>{poll.recepients.map((recepient: any) =>
+                        {/* <th>{poll.recepients.map((recepient: any) =>
                             <div>
                                 {recepient}<br></br></div>
-                        )}</th>
+                        )}</th> */}
                     </tr>
                 )}
             </table>

@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import Qr from './QrCode';
+import './css.css';
 
 
 export default function Login() {
@@ -64,7 +65,7 @@ export default function Login() {
                 style={{
                     display: submitted ? '' : 'none',
                 }}>
-                <h1>User {name} successfully registered!!</h1>
+                <h2>User {name} successfully connected!!</h2>
             </div>
         );
     };
@@ -77,15 +78,15 @@ export default function Login() {
                 style={{
                     display: error ? '' : 'none',
                 }}>
-                <h1>Please enter all the fields</h1>
+                <h2>Please enter all the fields</h2>
             </div>
         );
     };
 
     return (
-        <div className="form">
+        <div className="center">
             <div>
-                <h1>User Registration</h1>
+                <h1>User Login</h1>
             </div>
 
             {/* Calling to the methods */}
@@ -96,16 +97,16 @@ export default function Login() {
 
             <form>
                 {/* Labels and inputs for form data */}
-                <label className="label">Name</label>
-                <input onChange={handleName} className="input"
+                <label className="label_register_login">Name:</label>
+                <input onChange={handleName} className="input_register_login"
                     value={name} type="text" />
 
 
-                <label className="label">Password</label>
-                <input onChange={handlePassword} className="input"
+                <label className="label_register_login">Password:</label>
+                <input onChange={handlePassword} className="input_register_login"
                     value={password} type="password" />
 
-                <button onClick={handleSubmit} className="btn" type="submit">
+                <button onClick={handleSubmit} className="button_submit" type="submit">
                     Submit
                 </button>
                 <Qr username={crediantials.username} password={crediantials.password}></Qr>

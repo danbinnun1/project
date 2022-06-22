@@ -1,0 +1,165 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#register {
+  width: 400px;
+}
+
+.input_register_login {
+  padding: 3px;
+  box-shadow: 3px 3px 5px grey;
+  font-size: 14px;
+  font-weight: 600;
+  width: 200px;
+  margin: 0 auto;
+}
+
+.input_checkbox {
+  padding: 3px;
+  box-shadow: 3px 3px 5px white;
+  font-size: 14px;
+  font-weight: 600;
+  width: 200px;
+  margin: 0 auto;}
+
+.label_register_login {
+  color: #000000;
+  font-weight: bold;
+  display: block;
+  margin: 0 auto;
+
+
+}
+
+.center {
+  margin: 0 auto;
+  width: 300px;
+  height: 300px;
+  /* background: black; */
+  /* padding: 20px; */
+  color: black;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  margin: auto;
+}
+/* 
+label:after {
+  content: ": "
+} */
+
+
+.top_center {
+  display: table;
+  margin: 0 auto;
+  border: 1px solid black;
+}
+
+
+/* .polls_center {
+  display: table;
+  margin: 0 auto;
+  border: 1px solid black;
+} */
+
+.center_for_poll {
+  margin: 10px auto;
+  width: 300px;
+  height: 300px;
+  /* background: black; */
+  /* padding: 20px; */
+  color: black;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  
+
+  /* margin: auto; */
+}
+
+
+.center_in_div {
+  margin:auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* background-color:green; */
+}
+
+/* CSS */
+.button_submit {
+  background-color: rgba(51, 51, 51, 0.05);
+  border-radius: 8px;
+  border-width: 0;
+  color: #333333;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 10px 12px;
+  text-align: center;
+  transition: all 200ms;
+  vertical-align: baseline;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+
+.button_general {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 100px;
+}
+
+
+.menu_link:link,
+.menu_link:visited {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 100px;
+}
+
+.menu_link:hover,
+.menu_link:active {
+  background-color: black;
+  color: white;
+}
+
+
+.select {
+  margin: 20px;
+  width: 100px;
+  padding: 5px 5px 5px 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  height: 28px;
+
+  appearance: none;
+  background:  #eee;
+}
+

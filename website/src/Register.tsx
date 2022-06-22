@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import './css.css';
 
 
 export default function Register() {
@@ -54,7 +55,7 @@ export default function Register() {
                 style={{
                     display: submitted ? '' : 'none',
                 }}>
-                <h1>User {name} successfully registered!!</h1>
+                <h2>User {name} successfully registered!!</h2>
             </div>
         );
     };
@@ -67,13 +68,13 @@ export default function Register() {
                 style={{
                     display: error ? '' : 'none',
                 }}>
-                <h1>Please enter all the fields</h1>
+                <h2>Please enter all the fields</h2>
             </div>
         );
     };
 
     return (
-        <div className="form">
+        <div className="center">
             <div>
                 <h1>User Registration</h1>
             </div>
@@ -86,16 +87,16 @@ export default function Register() {
 
             <form>
                 {/* Labels and inputs for form data */}
-                <label className="label">Name</label>
-                <input onChange={handleName} className="input"
+                <label className="label_register_login">Name:</label>
+                <input onChange={handleName} className="input_register_login"
                     value={name} type="text" />
 
 
-                <label className="label">Password</label>
-                <input onChange={handlePassword} className="input"
+                <label className="label_register_login">Password:</label>
+                <input onChange={handlePassword} className="input_register_login"
                     value={password} type="password" />
 
-                <button onClick={handleSubmit} className="btn" type="submit">
+                <button onClick={handleSubmit} className="button_submit" type="submit">
                     Submit
                 </button>
             </form>
