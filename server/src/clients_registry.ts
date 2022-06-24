@@ -23,7 +23,7 @@ export async function tryLogin(username: string, password: string): Promise<stri
         });
 
         if (clients[username] === 'loading') {
-            return `/home/dan/project/server/qr_code_${username}.png`;
+            return `${__dirname}/../qr_code_${username}.png`;
         }
 
         if (clients[username] !== undefined) {
@@ -42,6 +42,6 @@ export async function tryLogin(username: string, password: string): Promise<stri
         }).then(client => start(client));
         await getQrCode();
         clients[username] = 'loading';
-        return `/home/dan/project/server/qr_code_${username}.png`;
+        return `${__dirname}/../qr_code_${username}.png`;
     }
 }

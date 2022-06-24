@@ -11,6 +11,10 @@ export default function RecepientsList(props: any) {
             }} className="input_register_login" type="text" />
             <button onClick={(e: any) => {
                 e.preventDefault();
+                if (!newRecepient){
+                    alert('cannot be empty');
+                    return;
+                }
                 props.add(newRecepient);
             }} className="button_submit" type="submit">
                 Add Participant

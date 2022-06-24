@@ -10,6 +10,7 @@ import { addPoll, findByNameAndUsername, getPolls, updatePoll } from "./db/poll"
 import { PollData, PollDataDB, startPoll } from "./poll";
 import { clients, tryLogin } from "./clients_registry";
 import { Client, ContactId } from "@open-wa/wa-automate";
+import {resolve} from 'path';
 
 app.get('/users', async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
@@ -58,6 +59,7 @@ app.get('/send_poll', async (req, res) => {
 app.get('/register', async (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     await add({ username: req.query.id as string, password: req.query.password as string });
+    res.send('good');
 });
 
 app.get('/login', async (req, res) => {
@@ -67,7 +69,7 @@ app.get('/login', async (req, res) => {
         res.send("abcd");
         return;
     }
-    res.sendFile(qr as string);
+    res.sendFile(resolve(qr) as string);
 })
 connectToDb().then(() => console.log("connected to mongo"));
 app.listen(5019, () => console.log('AKDHAKsdh'));

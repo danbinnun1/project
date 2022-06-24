@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "rm qr_code_1.png; rm 1.data.json; rm -rf _IGNORE_1; ts-node -r ./src"
+    "start": "rm *.png; rm *.data.json; rm -rf _IGNORE_1; ts-node -r ./src"
   },
   "repository": {
     "type": "git",
