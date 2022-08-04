@@ -5,6 +5,46 @@ import Edge from './Edge';
 import Vertex from "./Vertex";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
 
+function isCyclicUtil(vertexes:any, edges:any, visited:any, current:any,parent:any){
+    visited[current]=true;
+    let neighbors=[];
+    for (let edge of edges){
+        if (edge.src==current){
+            neighbors.push(edge.dest);
+        }
+        if (edge.dest==current){
+            neighbors.push(edge.src);
+        }
+    }
+    for (let neighbor of neighbors){
+        if (!visited[neighbor]){
+            if (isCyclicUtil(vertexes,edges,visited,neighbor,current)){
+                return true;
+            }
+        }
+        else if (neighbor!==parent){
+            return true;
+        }
+    }
+    return false;
+}
+
+function isTree(vertexes:any,edges:any){
+    let visited:any={};
+    for (let vertex of vertexes){
+        visited[vertex.id]=false;
+    }
+    let vertexesIds=vertexes.map((v:any)=>v.id);
+    if (isCyclicUtil(vertexesIds,edges,visited,vertexesIds[0],-1)){
+        return false;
+    }
+    for (let id of vertexesIds){
+        if (!visited[id]){
+            return false;
+        }
+    }
+    return true;
+}
 
 async function toBase64(file: File) {
     return await new Promise((resolve, reject) => {
@@ -268,6 +308,53 @@ export default function PollCreation(props: any) {
                     }}><button className="button_submit" onClick={() => {
                         setDone(true);
                     }}>cancel</button></th>
+                    <th style={{
+                        width: '20%', height: '100%',
+                        borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'
+                    }}><button className="button_submit" onClick={() => {
+                        if (!isTree(vertexesRef.current,edgesRef.current)){
+                            alert('must be a tree to format.');
+                            return;
+                        }
+                        if(start==-1){
+                            alert('must have start vertex.');
+                            return;
+                        }
+                        let queue=[vertexesRef.current[start].id];
+                        let levels=[[vertexesRef.current[start].id]];
+                        while (queue.length>0){
+                            let nextLevel=[];
+                            for (let i of queue){
+                                let neighbors=[];
+                                for (let edge of edgesRef.current){
+                                    if (edge.src==i){
+                                        neighbors.push(edge.dest);
+                                    }
+                                }
+                                for (let neighbor of neighbors){
+                                    nextLevel.push(neighbor);
+                                }
+                            }
+                            levels.push(nextLevel);
+                            queue=nextLevel;
+                        }
+                        levels.pop();
+                        let heightGap=0.8*window.innerHeight/(levels.length+1);
+                        let newVertexes = [...vertexesRef.current];
+                        let y=heightGap+0.1* window.innerHeight;
+                        for (let level of levels){
+                            let widthGap=0.8*window.innerWidth/(level.length+1);
+                            let x=widthGap;
+                            for (let v of level){
+                                newVertexes[newVertexes.findIndex((vertex) => vertex.id === v)].x=x;
+                                newVertexes[newVertexes.findIndex((vertex) => vertex.id === v)].y=y;
+                                x+=widthGap;
+                            }
+                            y+=heightGap;
+                        }
+                        setVertexes(newVertexes);
+
+                    }}>format</button></th>
                     <th style={{
                         width: '20%', height: '100%',
                         borderWidth: '1px', borderColor: 'black', borderStyle: 'solid'

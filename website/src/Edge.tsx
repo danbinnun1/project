@@ -6,7 +6,7 @@ export default function Edge(props: any) {
     const length = Math.sqrt((props.x1 - props.x2) * (props.x1 - props.x2)
         + (props.y1 - props.y2) * (props.y1 - props.y2));
     let angle = Math.atan((props.y1 - props.y2) / (props.x1 - props.x2));
-    if (props.x1 > props.x2){
+    if (props.x1 >= props.x2){
         angle += Math.PI;
     }
     return <div style={{
