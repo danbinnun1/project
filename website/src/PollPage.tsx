@@ -6,6 +6,9 @@ import './css.css';
 import { Bar } from "react-chartjs-2";
 
 
+  import { Chart, registerables } from 'chart.js'
+
+  Chart.register(...registerables)
 
 export default function Poll() {
     const colors = ['blue', 'red', 'green', 'yellow', 'black', 'orange', 'purple', 'pink', 'grey'];
@@ -41,6 +44,7 @@ export default function Poll() {
                 }
             }
             setCategories(newCategories);
+            console.log(1234);
             let chartData: any = {};
             for (let category in newCategories) {
                 if (!newCategories[category]) {
@@ -56,7 +60,7 @@ export default function Poll() {
                     ]
                 };
             }
-            console.log(chartData)
+            console.log(1234)
             setChartData(chartData);
         }
         fetchData();
@@ -110,7 +114,8 @@ export default function Poll() {
         await fetch("http://localhost:5019/send_poll?username=" + params.username + "&name=" + params.pollName);
         setValue(value => value + 1);
     }
-    console.log(chartData)
+    console.log(JSON.stringify(chartData));
+    console.log(JSON.stringify(categories));
     return (
         <div className="center_for_poll">
             <a href={'/new_poll/' + params.username + '?poll=' + params.pollName} className="menu_link center_in_div"><b>edit poll</b></a>
@@ -165,7 +170,7 @@ export default function Poll() {
                             }))}></PieChart>
                 </div>
             ))}
-            {/* {Object.keys(categories).map((category: any) => (
+            {JSON.stringify(chartData)==='{}'?'': Object.keys(categories).map((category: any) => (
                 <div>
                     <Bar
                         data={(chartData[category] as any)}
@@ -183,7 +188,7 @@ export default function Poll() {
                         }}
                     />
                 </div>
-            ))} */}
+            ))}
         </div>
     )
 }
