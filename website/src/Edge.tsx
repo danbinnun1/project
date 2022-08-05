@@ -9,7 +9,7 @@ export default function Edge(props: any) {
     if (props.x1 >= props.x2){
         angle += Math.PI;
     }
-    return <div style={{
+    return <div title={props.text} style={{
         height: props.height + 'px', width: length + 'px',
         left: middleX - length / 2 + 'px', top: middleY - props.height / 2 + 'px', position: 'absolute',
         transform: 'rotate(' + angle + 'rad)',

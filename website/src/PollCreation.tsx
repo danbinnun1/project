@@ -472,7 +472,7 @@ export default function PollCreation(props: any) {
         }}>
         </div>
         {edges.map((edge, index) => (
-            <Edge x1={vertexes[vertexById(edge.src)].x + vertexSize / 2} x2={vertexes[vertexById(edge.dest)].x + vertexSize / 2}
+            <Edge text={edge.text} x1={vertexes[vertexById(edge.src)].x + vertexSize / 2} x2={vertexes[vertexById(edge.dest)].x + vertexSize / 2}
                 y1={vertexes[vertexById(edge.src)].y + vertexSize / 2}
                 y2={vertexes[vertexById(edge.dest)].y + vertexSize / 2}
                 height={40}
@@ -486,6 +486,7 @@ export default function PollCreation(props: any) {
             <Vertex size={vertexSize} x={vertex.x} y={vertex.y} id={vertex.id} positionChanged={positionChanged}
                 onMouseUp={onMouseUp} dragging={vertex.dragging}
                 selected={selectedVertex === vertex.id}
+                text={vertex.text}
                 onClick={() => {
                     if (selectedVertex !== -1 && addingEdge) {
                         let newEdges = [...edgesRef.current];
