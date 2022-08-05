@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import RecepientsList from "./RecepientsList";
 import { PieChart } from 'react-minimal-pie-chart';
 import './css.css';
+import { Bar } from "react-chartjs-2";
 
 
 
@@ -16,6 +17,10 @@ export default function Poll() {
     const [categories, setCategories] = useState<{
         [name: string]:
         { [result: string]: number }
+    }>({});
+    const [chartData, setChartData] = useState<{
+        [name: string]:
+        {}
     }>({});
     useEffect(() => {
         async function fetchData() {
@@ -36,6 +41,23 @@ export default function Poll() {
                 }
             }
             setCategories(newCategories);
+            let chartData: any = {};
+            for (let category in newCategories) {
+                if (!newCategories[category]) {
+                    continue;
+                }
+                chartData[category] = {
+                    labels: Object.keys(newCategories[category]),
+                    datasets: [
+                        {
+                            label: category,
+                            data: Object.values(newCategories[category]),
+                        }
+                    ]
+                };
+            }
+            console.log(chartData)
+            setChartData(chartData);
         }
         fetchData();
     }, [value]);
@@ -88,6 +110,7 @@ export default function Poll() {
         await fetch("http://localhost:5019/send_poll?username=" + params.username + "&name=" + params.pollName);
         setValue(value => value + 1);
     }
+    console.log(chartData)
     return (
         <div className="center_for_poll">
             <a href={'/new_poll/' + params.username + '?poll=' + params.pollName} className="menu_link center_in_div"><b>edit poll</b></a>
@@ -142,6 +165,25 @@ export default function Poll() {
                             }))}></PieChart>
                 </div>
             ))}
+            {/* {Object.keys(categories).map((category: any) => (
+                <div>
+                    <Bar
+                        data={(chartData[category] as any)}
+                        options={{
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: "Cryptocurrency prices"
+                                },
+                                legend: {
+                                    display: true,
+                                    position: "bottom"
+                                }
+                            }
+                        }}
+                    />
+                </div>
+            ))} */}
         </div>
     )
 }
