@@ -56,6 +56,13 @@ export default function Poll() {
                         {
                             label: category,
                             data: Object.values(newCategories[category]),
+                            backgroundColor: [
+                                "#ffbb11",
+                                "#ecf0f1",
+                                "#50AF95",
+                                "#f3ba2f",
+                                "#2a71d0",
+                              ]
                         }
                     ]
                 };
@@ -160,7 +167,7 @@ export default function Poll() {
             <br></br>
 
             <RecepientsList remove={removeRecepient} add={addRecepient} recepients={poll === undefined ? [] : poll.recepients}></RecepientsList>
-            {Object.keys(categories).map((category: any) => (
+            {/* {Object.keys(categories).map((category: any) => (
                 <div>
                     <PieChart
                         data={Object.keys(categories[category])
@@ -169,7 +176,7 @@ export default function Poll() {
                                 value: categories[category][key], color: colors[Object.keys(categories[category]).indexOf(key)]
                             }))}></PieChart>
                 </div>
-            ))}
+            ))} */}
             {JSON.stringify(chartData)==='{}'?'': Object.keys(categories).map((category: any) => (
                 <div>
                     <Bar
@@ -178,11 +185,11 @@ export default function Poll() {
                             plugins: {
                                 title: {
                                     display: true,
-                                    text: "Cryptocurrency prices"
+                                    text: category
                                 },
                                 legend: {
-                                    display: true,
-                                    position: "bottom"
+                                    display: false,
+                                    position: "top"
                                 }
                             }
                         }}
